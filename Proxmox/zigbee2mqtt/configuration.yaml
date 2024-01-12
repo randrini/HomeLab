@@ -42,51 +42,6 @@ devices:
   '0xa4c138a0d560d0a6':
     friendly_name: heater_diner
   '0xa4c138d122636948':
-zigbee2mqtt:~/.z2m# cat configuration.yaml 
-data_path: /etc/zigbee2mqtt
-socat:
-  enabled: false
-  master: pty,raw,echo=0,link=/tmp/ttyZ2M,mode=777
-  slave: tcp-listen:8485,keepalive,nodelay,reuseaddr,keepidle=1,keepintvl=1,keepcnt=5
-  options: '-d -d'
-  log: false
-homeassistant: true
-mqtt:
-  server: mqtt://192.168.1.139:1883
-  user: mqtt-user
-  password: mqtt-user
-  keepalive: 60
-  reject_unauthorized: true
-  version: 4
-serial:
-  port: >-
-    /dev/serial/by-id/usb-ITEAD_SONOFF_Zigbee_3.0_USB_Dongle_Plus_V2_20220812171903-if00
-  adapter: ezsp
-frontend:
-  port: 8099
-advanced:
-  homeassistant_legacy_entity_attributes: false
-  legacy_api: false
-  legacy_availability_payload: false
-  log_level: info
-device_options:
-  legacy: false
-devices:
-  '0xa4c138a0576c1720':
-    friendly_name: heater_inayah
-  '0xa4c13844a01fa284':
-    friendly_name: heater_chambre_rouge
-  '0xa4c13839aa985306':
-    friendly_name: heater_parents
-  '0xa4c1386531b58491':
-    friendly_name: heater_chambre_jaune
-  '0xa4c138de4e816ade':
-    friendly_name: ouverture_garage
-  '0xa4c1384c18551ce1':
-    friendly_name: ouv_entree
-  '0xa4c138a0d560d0a6':
-    friendly_name: heater_diner
-  '0xa4c138d122636948':
     friendly_name: heater_sejour
   '0x00158d000966cb9c':
     friendly_name: zlinky
