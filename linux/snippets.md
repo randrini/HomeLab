@@ -4,9 +4,9 @@
   
   `grep -rn net.ipv4.ip_forward /etc/*`
 
-*SSH to another linux and copy file*
+*SFP to another linux and copy file*
 ```shell
-ssh roo@192.168.1.100
+sftp root@192.168.1.100
 get filename
 get -r recursiveFolder/
 ````
