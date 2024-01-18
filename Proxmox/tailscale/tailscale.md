@@ -1,8 +1,7 @@
 ### Alpine Linux CT
 
 *In case needed*
-  `rc-update add tailscale`
-  `rc-service tailscale restart`
+  `rc-update add tailscale  && rc-service tailscale restart`
   
 
 *Add IP forwarding*
