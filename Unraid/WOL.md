@@ -1,1 +1,5 @@
+Install Dynamix S3 Sleep plugin
 
+Set Wake On Lan to g
+
+add to /config/go ```ethtool -s eth0 wol g```
