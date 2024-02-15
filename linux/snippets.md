@@ -17,12 +17,9 @@ $ cd Documents
 Connect
 
 $ sftp sammy@your_server_ip_or_remote_hostname
-Go the directory that contains the file to be transferred.
 
 $ cd NASA/secret_files/
-Transfer
 
 $ get UFO_blueprint.odt
-To get the complete directory, instead use
 
 $ get -r secret_files/
