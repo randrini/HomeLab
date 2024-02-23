@@ -1,0 +1,1798 @@
+type: vertical-stack
+cards:
+  - type: custom:button-card
+    template:
+      - title_card
+    styles:
+      card:
+        - margin-top: 3px
+      name:
+        - justify-self: middle
+    name: |
+      [[[ return states['sensor.bonjour'].state ]]]
+  - type: custom:button-card
+    tap_action:
+      action: navigate
+      navigation_path: /lovelace/Calendrier
+    entity: weather.pirateweather
+    show_entity_picture: false
+    show_icon: false
+    show_name: false
+    show_state: false
+    show_label: false
+    template:
+      - police
+      - no_style
+    styles:
+      grid:
+        - grid-template-areas: |
+            "info3"
+            "info4"
+        - grid-template-columns: 1fr
+        - grid-template-rows: min-content 1fr
+      card:
+        - padding-top: 01%
+        - border-radius: 24px
+        - height: 75px
+        - background: transparent
+      custom_fields:
+        info1:
+          - position: absolute
+          - top: 9px
+          - left: 20px
+          - font-size: 14px
+          - font-weight: null
+          - font-style: null
+          - text-align: left
+          - color: var(--text-on)
+          - white-space: normal
+          - filter: drop-shadow(0px 2px 2px rgba(0,0,0,0.3))
+        info2:
+          - position: absolute
+          - top: 30px
+          - left: 20px
+          - font-size: 28px
+          - font-weight: bold
+          - font-style: null
+          - text-align: left
+          - color: var(--text-on)
+          - white-space: normal
+          - filter: drop-shadow(0px 2px 2px rgba(0,0,0,0.3))
+        info3:
+          - padding-right: 18px
+          - padding-top: 3px
+          - text-align: right
+          - font-size: 14px
+          - color: transparent
+          - filter: drop-shadow(0px 2px 2px rgba(0,0,0,0.3))
+        info4:
+          - padding-right: 18px
+          - padding-top: 15px
+          - font-size: 26px
+          - font-weight: bold
+          - text-align: right
+          - color: var(--text-on)
+          - filter: drop-shadow(0px 2px 2px rgba(0,0,0,0.3))
+        entity_picture:
+          - position: absolute
+          - width: 24%
+          - top: 30px
+          - left: 58%
+          - opacity: 100%
+          - '--ha-card-border-width': 0px
+          - '--paper-card-background-color': rgba(0, 0, 0, 0.0)
+          - '--ha-card-background': rgba(0, 0, 0, 0.0)
+          - '--ha-card-box-shadow': none
+        temp:
+          - position: absolute
+          - top: 7%
+          - left: 61%
+          - width: calc(100% + 0px)
+          - '--ha-card-border-width': 0px
+          - '--paper-card-background-color': rgba(0, 0, 0, 0.0)
+          - '--ha-card-background': rgba(0, 0, 0, 0.0)
+          - '--ha-card-box-shadow': none
+        air:
+          - position: absolute
+          - top: 7%
+          - left: 78%
+          - width: calc(100% + 0px)
+          - '--ha-card-border-width': 0px
+          - '--paper-card-background-color': rgba(0, 0, 0, 0.0)
+          - '--ha-card-background': rgba(0, 0, 0, 0.0)
+          - '--ha-card-box-shadow': none
+        graph:
+          - top: 30%
+          - opacity: 40%
+          - position: absolute
+          - align-self: middle
+          - white-space: normal
+          - width: calc(100% + 05px)
+          - '--ha-card-border-width': 0px
+          - '--paper-card-background-color': rgba(0, 0, 0, 0.0)
+          - '--ha-card-background': rgba(0, 0, 0, 0.0)
+          - '--ha-card-box-shadow': none
+    custom_fields:
+      info1: >
+        [[[return states['sensor.date_jour'].state + "
+        "+states['sensor.date_numero'].state + " " +
+        states['sensor.date_mois_court'].state +"." ]]]    
+      info2: |
+        [[[return states['sensor.time'].state]]]    
+      info3: |
+        [[[return states['sensor.weather_conditions'].state  ]]]  
+      info4: |
+        [[[return states['sensor.weather_temperature'].state + "°" ]]]
+      temp:
+        card:
+          type: custom:button-card
+          entity: sensor.livingroom_th_temperature
+          icon: mdi:home-thermometer-outline
+          label: |
+            [[[ 
+               if (states['sensor.livingroom_th_temperature'].state == "unavailable")
+                 return "HS"
+                return states['sensor.livingroom_th_temperature'].state+"°" 
+            ]]]        
+          template:
+            - info_header
+          layout: icon_label
+          show_label: true
+          styles:
+            card:
+              - width: auto
+            icon:
+              - width: 17px
+          state:
+            - value: 26.9
+              operator: '>'
+              styles:
+                icon:
+                  - color: var(--color-icon-red)
+            - value: 24.9
+              operator: '>'
+              styles:
+                icon:
+                  - color: var(--color-icon-orange)
+            - value: 18.9
+              operator: <
+              styles:
+                icon:
+                  - color: var(--color-icon-blue)
+          tap_action:
+            action: navigate
+            navigation_path: /lovelace/Temp
+      air:
+        card:
+          type: custom:button-card
+          entity: sensor.u_s_air_quality_index
+          icon: mdi:blur
+          label: |
+            [[[ 
+               if (states['sensor.u_s_air_quality_index'].state == "unavailable")
+                 return "HS"
+                return states['sensor.qualite_air_pourcentage'].state+"%" 
+            ]]]
+          template:
+            - info_header
+          layout: icon_label
+          show_label: true
+          styles:
+            card:
+              - width: auto
+            icon:
+              - width: 17px
+              - color: |
+                  [[[
+                    if (states['sensor.qualite_air_pourcentage'].state >= 96.1 && states['sensor.qualite_air_pourcentage'].state <= 98.7)
+                      return "var(--color-icon-blue)" 
+                    if (states['sensor.qualite_air_pourcentage'].state >= 88.1 && states['sensor.qualite_air_pourcentage'].state <= 96)
+                      return "var(--color-icon-orange)" 
+                    if (states['sensor.qualite_air_pourcentage'].state >= 60.1 && states['sensor.qualite_air_pourcentage'].state <= 88)
+                      return "var(--color-icon-orange)" 
+                    if (states['sensor.qualite_air_pourcentage'].state >= 0 && states['sensor.qualite_air_pourcentage'].state <= 60)
+                      return "var(--color-icon-red)" 
+                    return "var(--icon-off)" 
+                  ]]]  
+          state:
+            - value: unavailable
+              styles:
+                icon:
+                  - color: var(--color-icon-red)
+                  - animation: blink 0.8s ease infinite
+          tap_action:
+            action: navigate
+            navigation_path: /lovelace/air
+      graph:
+        card:
+          type: custom:mini-graph-card
+          entities:
+            - entity: sensor.livingroom_th_temperature
+              color: var(--graph-line)
+          tap_action:
+            action: navigate
+            navigation_path: /lovelace/Calendrier
+          hours_to_show: 24
+          hour24: true
+          animate: true
+          update_interval: 30
+          aggregate_func: avg
+          line_width: 1
+          height: 40
+          group: true
+          show:
+            labels: false
+            fill: false
+            state: false
+            name: false
+            icon: false
+      entity_picture:
+        card:
+          type: custom:button-card
+          show_entity_picture: true
+          entity_picture: |
+            [[[
+              if ((states['weather.forecast_maison'].state == 'sunny') && (states['sun.sun'].state == 'above_horizon'))
+                return "/local/weather/icones animes/clear-day.svg"
+              if ((states['weather.forecast_maison'].state == 'sunny') || (states['weather.forecast_maison'].state == 'clear-night') && (states['sun.sun'].state == 'below_horizon'))
+                return "/local/weather/icones animes/clear-night.svg"  
+
+              if ((states['weather.forecast_maison'].state == 'lightning-rainy') && (states['sun.sun'].state == 'above_horizon'))
+                return "/local/weather/icones animes/thunderstorms-day-rain.svg"
+              if ((states['weather.forecast_maison'].state == 'lightning-rainy') || (states['weather.forecast_maison'].state == 'clear-night') && (states['sun.sun'].state == 'below_horizon'))
+                return "/local/weather/icones animes/thunderstorms-night-rain.svg"
+
+              if ((states['weather.forecast_maison'].state == 'fog') && (states['sun.sun'].state == 'above_horizon'))
+                return "/local/weather/icones animes/fog-day.svg"             
+              if ((states['weather.forecast_maison'].state == 'fog') && (states['sun.sun'].state == 'below_horizon'))
+                return "/local/weather/icones animes/fog-night.svg"
+
+              if ((states['weather.forecast_maison'].state == 'partlycloudy') && (states['sun.sun'].state == 'above_horizon'))
+                return "/local/weather/icones animes/partly-cloudy-day.svg"                    
+              if ((states['weather.forecast_maison'].state == 'partlycloudy') && (states['sun.sun'].state == 'below_horizon'))
+                return "/local/weather/icones animes/partly-cloudy-night.svg"  
+
+              if ((states['weather.forecast_maison'].state == 'rainy') && (states['sun.sun'].state == 'above_horizon'))
+                return "/local/weather/icones animes/partly-cloudy-day-rain.svg"                      
+              if ((states['weather.forecast_maison'].state == 'rainy') && (states['sun.sun'].state == 'below_horizon'))
+                return "/local/weather/icones animes/partly-cloudy-night-rain.svg" 
+
+              if ((states['weather.forecast_maison'].state == 'lightning') && (states['sun.sun'].state == 'above_horizon'))
+                return "/local/weather/icones animes/thunderstorms-day.svg"                      
+              if ((states['weather.forecast_maison'].state == 'lightning') && (states['sun.sun'].state == 'below_horizon'))
+                return "/local/weather/icones animes/thunderstorms-night.svg" 
+
+              if (states['weather.forecast_maison'].state == 'clear-night')
+                return "/local/weather/icones animes/clear-night.svg";
+
+              if (states['weather.forecast_maison'].state == 'sleet')
+                return "/local/weather/icones animes/sleet.svg";  
+
+              if (states['weather.forecast_maison'].state == 'pouring')
+                return "/local/weather/icones animes/umbrella.svg"; 
+
+              if (states['weather.forecast_maison'].state == 'snowy-rainy')
+                return "/local/weather/icones animes/sleet.svg";  
+
+              if (states['weather.forecast_maison'].state == 'snow')
+                return "/local/weather/icones animes/snow.svg"; 
+
+              if (states['weather.forecast_maison'].state == 'snowy')
+                return "/local/weather/icones animes/snow.svg"; 
+
+              if (states['weather.forecast_maison'].state == 'cloudy')
+                return "/local/weather/icones animes/cloudy.svg"; 
+
+              if (states['weather.forecast_maison'].state == 'wind')
+                return "/local/weather/icones animes/wind.svg"; 
+
+              if (states['weather.forecast_maison'].state == 'hail')
+                return "/local/weather/icones animes/hail.svg"; 
+            ]]]
+  - type: custom:vertical-stack-in-card
+    horizontal: true
+    card_mod:
+      style: |
+        ha-card { 
+          padding: 5px 0px 5px 0px;
+          border-radius: 40px !important;
+          margin: 3px 10px 0px 10px ;
+          background: var(--ha-card-background);
+          border-color: rgba(12, 12, 14, 0.2);
+          border-style: outset;
+          border-width: 1px;
+          box-shadow: 1px 1px 2px 0px rgba(10, 10, 10,0.4);
+
+        }
+    cards:
+      - type: custom:button-card
+        tap_action:
+          action: navigate
+          navigation_path: /lovelace/Alarmes
+        entity: alarm_control_panel.alarmo
+        double_tap_action:
+          action: more-info
+        show_label: false
+        template:
+          - mini_card
+          - security_mini_card_state
+          - custom_state
+        icon: |
+          [[[
+            if (entity.state == "disarmed" )
+              return "mdi:shield-off";
+            if (entity.state == "armed_away" )
+              return "mdi:shield-lock";
+            if (entity.state == "armed_home" )
+              return "mdi:shield-home";
+            if (entity.state == "armed_night" )
+              return "mdi:shield-moon";
+            if (entity.state == "arming" )
+              return "mdi:shield-half-full";
+            if (entity.state == "triggered" )
+              return "mdi:shield-alert";
+            return "mdi:shield-off";
+          ]]]
+        custom_fields:
+          notification: |
+            [[[ return Math.floor(states['sensor.compteur_home'].state ) ]]]  
+      - type: custom:button-card
+        double_tap_action:
+          action: navigate
+          navigation_path: /lovelace/Alarmes
+        tap_action:
+          action: more-info
+        entity: alarm_control_panel.blink_blink_maison
+        show_label: false
+        template:
+          - mini_card
+          - security_mini_card_state
+          - custom_state
+        name: Sonnette
+        icon: mdi:doorbell
+      - type: custom:button-card
+        tap_action:
+          action: navigate
+          navigation_path: /lovelace/Lumières
+        double_tap_action:
+          action: more-info
+        entity: light.all_lights
+        template:
+          - mini_card
+          - light_mini_card_state
+        show_name: false
+        show_label: false
+        custom_fields:
+          notification: >
+            [[[ return Math.floor(states['sensor.compteur_lumiere'].state )
+            ]]]          
+      - type: custom:button-card
+        tap_action:
+          action: navigate
+          navigation_path: /lovelace/porte_mouv_serrure
+        double_tap_action:
+          action: more-info
+        entity: binary_sensor.portes
+        show_label: false
+        template:
+          - mini_card
+          - security_mini_card_state
+          - custom_state
+        icon: |
+          [[[
+            if (states['binary_sensor.portes'].state == 'on')
+              return "mdi:door-open";
+            return "mdi:door-closed";
+          ]]]  
+        custom_fields:
+          notification: >
+            [[[ return Math.floor(states['sensor.compteur_portes'].state )
+            ]]]            
+      - type: custom:button-card
+        tap_action:
+          action: navigate
+          navigation_path: /lovelace/porte_mouv_serrure
+        double_tap_action:
+          action: more-info
+        entity: lock.serrures
+        show_label: false
+        template:
+          - mini_card
+          - security_mini_card_state
+          - custom_state
+        icon: |
+          [[[ 
+            if (states['lock.serrures'].state == 'unlocked')
+              return "mdi:lock-open"
+            return "mdi:lock"
+          ]]]  
+        styles:
+          icon:
+            - animation: |
+                [[[
+                  if (states['lock.heater_diner_child_lock'].state == 'jammed' || states['lock.heater_sejour_child_lock'].state == 'jammed')
+                    return 'blink 0.8s ease infinite'  
+                ]]]              
+        custom_fields:
+          notification: >
+            [[[ return Math.floor(states['sensor.compteur_serrures'].state )
+            ]]]               
+      - type: custom:button-card
+        tap_action:
+          action: navigate
+          navigation_path: /lovelace/porte_mouv_serrure
+        double_tap_action:
+          action: more-info
+        entity: binary_sensor.mouvements
+        show_label: false
+        template:
+          - mini_card
+          - security_mini_card_state
+          - custom_state
+        name: Présences
+        icon: |
+          [[[ 
+            if (states['binary_sensor.mouvements'].state == 'on')
+              return "mdi:run-fast"
+            return "mdi:human-male"
+          ]]]  
+                
+        custom_fields:
+          notification: >
+            [[[ return Math.floor(states['sensor.compteur_mouvement'].state )
+            ]]]  
+  - type: conditional
+    conditions:
+      - condition: state
+        entity: alarm_control_panel.alarmo
+        state_not: disarmed
+    card:
+      type: custom:vertical-stack-in-card
+      cards:
+        - square: false
+          columns: 2
+          type: grid
+          cards:
+            - type: picture-glance
+              aspect_ratio: 60%
+              camera_image: camera.192_168_1_18
+              camera_view: auto
+              entities: []
+              card_mod:
+                style: |
+                  ha-card { 
+                    margin: 0px 3px;
+                    overflow: hidden !important;
+                    border-radius: 15px !important;
+                  }
+                  ha-card > div.box {
+                    display: none;
+                  }
+            - type: picture-glance
+              aspect_ratio: 60%
+              camera_image: camera.blink_homecamfront
+              camera_view: auto
+              entities: []
+              card_mod:
+                style: |
+                  ha-card { 
+                    margin: 0px 3px;
+                    overflow: hidden !important;
+                    border-radius: 15px !important;
+                  }
+                  ha-card > div.box {
+                    display: none;
+                  }
+            - type: picture-glance
+              camera_image: camera.blink_homedoorbell
+              camera_view: live
+              entities: []
+              card_mod:
+                style: |
+                  ha-card { 
+                    margin: 0px 3px;
+                    overflow: hidden !important;
+                    border-radius: 15px !important;
+                  }
+                  ha-card > div.box {
+                    display: none;
+                  }
+            - type: picture-glance
+              camera_image: camera.blink_inayah
+              camera_view: live
+              entities: []
+              card_mod:
+                style: |
+                  ha-card { 
+                    margin: 0px 3px;
+                    overflow: hidden !important;
+                    border-radius: 15px !important;
+                  }
+                  ha-card > div.box {
+                    display: none;
+                  }
+      card_mod:
+        style: |
+          ha-card {
+            background: none;
+            margin: -10px 30px 0px 30px;
+            overflow: hidden !important;
+            border-radius: 24px !important;
+          }
+  - type: conditional
+    conditions:
+      - condition: state
+        entity: alarm_control_panel.alarmo
+        state: armed_home
+    card:
+      type: custom:vertical-stack-in-card
+      cards:
+        - entity: camera.192_168_1_18
+          title: Sonnette
+          hide:
+            - date
+          global: small
+          image_click: play
+          image_view: arlo-stream
+          show:
+            - image_date
+          top_date: true
+          top_status: false
+          top_title: false
+          type: custom:aarlo-glance
+      card_mod:
+        style: |
+          ha-card {
+            margin: -10px 30px 0px 30px;
+            overflow: hidden !important;
+            border-radius: 24px !important;
+          }
+  - type: custom:button-card
+    card_mod:
+      style: |
+        ha-card { 
+          margin-top: 15px;
+        }
+    tap_action:
+      action: navigate
+      navigation_path: /lovelace/Calendrier
+    show_entity_picture: false
+    show_icon: false
+    show_name: false
+    show_state: false
+    show_label: false
+    template:
+      - police
+      - style
+    styles:
+      grid:
+        - grid-template-areas: |
+            "devices"
+            "titre_programme"
+            "alerte"            
+            "anniv"
+            "calendrier"
+            "poubelle"
+            "titre_avertissement_rpi"
+            "avertissement_rpi" 
+            "titre_avertissement_serrures_bloquees"
+            "serrures_bloquees"
+            "titre_avertissement_erreur_aspi"
+            "erreur_aspi"              
+            "titre_avertissement"
+            "device_hs" 
+            "titre_batterie_faible"
+            "batterie_faible"
+            "titre_activite"        
+            "serrure"
+            "electricite"
+            "courrier"
+            "mouvement"
+            "porte"
+            "lumiere"
+            "rappel"
+            "appareils"
+            "aspi_mode_vacances"
+            "appareils_charges"
+            "appareils_connectes"
+            "modes"
+            "titre_enfants"
+            "reveils_et_cours_off"
+            "reveils_et_cours_on"        
+            "titre_savoir"
+            "savoir"            
+            "titre_maj"
+            "maj"
+            "boutons"
+        - grid-template-columns: 1fr
+        - grid-template-rows: >-
+            min-content min-content min-content min-content  min-content 
+            min-content  min-content  min-content  min-content  min-content 
+            min-content  min-content   min-content  min-content  min-content
+            min-content  min-content  min-content  min-content  min-content 
+            min-content 1fr
+        - gap: 0%
+        - overflow: hidden
+      card:
+        - '-webkit-tap-highlight-color': rgba(0,0,0,0)
+        - padding: 3px 8px 02px 8px
+        - line-height: 147%
+        - font-size: 14px
+        - border-radius: 25px
+      custom_fields:
+        devices:
+          - padding: 02px 0px 0px 0px
+          - width: calc(100% + 0px)
+          - '--ha-card-border-width': 0px
+          - '--paper-card-background-color': rgba(0, 0, 0, 0.0)
+          - '--ha-card-background': rgba(0, 0, 0, 0.0)
+          - '--ha-card-box-shadow': none
+        boutons:
+          - padding: 20px 0px 03px 0px
+          - width: calc(100% + 0px)
+          - '--ha-card-border-width': 0px
+          - '--paper-card-background-color': rgba(0, 0, 0, 0.0)
+          - '--ha-card-background': rgba(0, 0, 0, 0.0)
+          - '--ha-card-box-shadow': none
+        titre_programme:
+          - filter: drop-shadow(0px 2px 2px rgba(0,0,0,0.3))
+          - padding: 20px 0px 01px 0px
+          - font-weight: bold
+          - font-style: null
+          - justifiy-self: start
+          - text-align: left
+          - color: var(--title)
+          - white-space: normal
+        alerte:
+          - filter: drop-shadow(0px 2px 2px rgba(0,0,0,0.3))
+          - color: |
+              [[[
+                if (states['sensor.91_weather_alert'].state == 'Jaune')
+                  return 'var(--color-gold)'
+                if (states['sensor.91_weather_alert'].state == 'Orange')
+                  return 'var(--color-orange)'
+                if (states['sensor.91_weather_alert'].state == 'Rouge')
+                  return 'var(--color-red)'
+                return ''
+              ]]]
+          - border-left: |
+              [[[
+                if (states['sensor.91_weather_alert'].state == "Vert")
+                  return '';
+                return '2px var(--color-blue) solid';
+              ]]]
+          - padding: 0px 0px 0px 0px
+          - padding-left: 8px
+          - justifiy-self: start
+          - text-align: left
+          - white-space: normal
+        anniv:
+          - filter: drop-shadow(0px 2px 2px rgba(0,0,0,0.3))
+          - border-left: |
+              [[[
+                if (states['sensor.anniversaire'].state == 'Aucun')
+                  return '';
+                return '2px var(--color-blue) solid';
+              ]]]
+          - padding: 0px 0px 0px 0px
+          - padding-left: 8px
+          - justifiy-self: start
+          - text-align: left
+          - color: lightgrey
+          - white-space: normal
+        calendrier:
+          - filter: drop-shadow(0px 2px 2px rgba(0,0,0,0.3))
+          - border-left: 2px var(--color-blue) solid
+          - padding: 0px 0px 0px 0px
+          - padding-left: 8px
+          - color: |
+              [[[
+                if (states['sensor.calendar_famille'].state == 'Aucun évènement')
+                  return 'var(--text-off)';
+                return 'var(--text-on)';
+              ]]]
+          - justifiy-self: start
+          - text-align: left
+          - white-space: normal
+        poubelle:
+          - filter: drop-shadow(0px 2px 2px rgba(0,0,0,0.3))
+          - border-left: 2px var(--color-blue) solid
+          - padding: 0px 0px 0px 0px
+          - padding-left: 8px
+          - color: |
+              [[[
+                if (states['sensor.calendar_poubelles'].state == 'Aucun rappel')
+                  return 'var(--text-off)';
+                return 'var(--text-on)';
+              ]]]
+          - justifiy-self: start
+          - text-align: left
+          - white-space: normal
+        titre_avertissement_rpi:
+          - filter: drop-shadow(0px 2px 2px rgba(0,0,0,0.3))
+          - padding: |
+              [[[
+                if (states['sensor.averissement_rpi'].state == '')
+                  return "0px 0px 0px 0px" ;
+                return "10px 0px 01px 0px" ;
+              ]]]       
+          - font-weight: bold
+          - justifiy-self: start
+          - text-align: left
+          - color: var(--color-dark-red)
+          - white-space: normal
+        avertissement_rpi:
+          - filter: drop-shadow(0px 2px 2px rgba(0,0,0,0.3))
+          - border-left: 2px var(--color-dark-red) solid
+          - padding: |
+              [[[
+                if (states['sensor.averissement_rpi'].state == '')
+                  return "0px 0px 0px 0px" ;
+                return "0px 0px 0px 08px" ;
+              ]]]
+          - justifiy-self: start
+          - color: var(--color-red)
+          - white-space: normal
+          - text-align: left
+        titre_avertissement_serrures_bloquees:
+          - filter: drop-shadow(0px 2px 2px rgba(0,0,0,0.3))
+          - font-weight: bold
+          - justifiy-self: start
+          - text-align: left
+          - color: var(--color-dark-red)
+          - white-space: normal
+        serrures_bloquees:
+          - filter: drop-shadow(0px 2px 2px rgba(0,0,0,0.3))
+          - border-left: 2px var(--color-dark-red) solid
+          - padding-left: 8px
+          - justifiy-self: start
+          - color: var(--color-red)
+          - white-space: normal
+          - text-align: left
+        titre_avertissement_erreur_aspi:
+          - filter: drop-shadow(0px 2px 2px rgba(0,0,0,0.3))
+          - padding: |
+              [[[
+                if (states['sensor.erreur_aspi'].state == '')
+                  return "0px 0px 0px 0px" ;
+                return "10px 0px 01px 0px" ;
+              ]]]       
+          - font-weight: bold
+          - justifiy-self: start
+          - text-align: left
+          - color: var(--color-dark-red)
+          - white-space: normal
+        erreur_aspi:
+          - filter: drop-shadow(0px 2px 2px rgba(0,0,0,0.3))
+          - border-left: 2px var(--color-dark-red) solid
+          - padding: |
+              [[[
+                if (states['sensor.erreur_aspi'].state == '')
+                  return "0px 0px 0px 0px" ;
+                return "0px 0px 0px 08px" ;
+              ]]]
+          - justifiy-self: start
+          - color: var(--color-red)
+          - white-space: normal
+          - text-align: left
+        titre_avertissement:
+          - filter: drop-shadow(0px 2px 2px rgba(0,0,0,0.3))
+          - padding: |
+              [[[
+                if (states['sensor.systeme_avertissement'].state == '')
+                  return "0px 0px 0px 0px" ;
+                return "10px 0px 01px 0px" ;
+              ]]]       
+          - font-weight: bold
+          - justifiy-self: start
+          - text-align: left
+          - color: var(--color-dark-red)
+          - white-space: normal
+        device_hs:
+          - filter: drop-shadow(0px 2px 2px rgba(0,0,0,0.3))
+          - border-left: 2px var(--color-dark-red) solid
+          - padding: |
+              [[[
+                if (states['sensor.systeme_avertissement'].state == '')
+                  return "0px 0px 0px 0px" ;
+                return "0px 0px 0px 08px" ;
+              ]]]
+          - justifiy-self: start
+          - color: var(--color-red)
+          - white-space: normal
+          - text-align: left
+        titre_batterie_faible:
+          - filter: drop-shadow(0px 2px 2px rgba(0,0,0,0.3))
+          - padding: |
+              [[[
+                if (states['sensor.batterie_faible'].state == '')
+                  return "0px 0px 0px 0px" ;
+                return "10px 0px 01px 0px" ;
+              ]]]          
+          - font-weight: bold
+          - justifiy-self: start
+          - text-align: left
+          - color: var(--color-dark-red)
+          - white-space: normal
+        batterie_faible:
+          - filter: drop-shadow(0px 2px 2px rgba(0,0,0,0.3))
+          - border-left: 2px var(--color-dark-red) solid
+          - padding-left: 8px
+          - justifiy-self: start
+          - color: var(--color-red)
+          - white-space: normal
+          - text-align: left
+        titre_enfants:
+          - filter: drop-shadow(0px 2px 2px rgba(0,0,0,0.3))
+          - padding: |
+              [[[
+                if (states['input_boolean.nilemato'].state == "off" && states['input_boolean.reveils'].state == "off" )
+                  return "0px 0px 0px 0px" ;
+                return "10px 0px 01px 0px" ;
+              ]]]  
+          - font-weight: bold
+          - justifiy-self: start
+          - text-align: left
+          - color: var(--title)
+          - white-space: normal
+        reveils_et_cours_off:
+          - filter: drop-shadow(0px 2px 2px rgba(0,0,0,0.3))
+          - border-left: 2px var(--color-blue) solid
+          - white-space: normal
+          - text-align: left
+          - padding: 0px 0px 0px 08px
+          - justifiy-self: start
+          - color: lightgrey
+        reveils_et_cours_on:
+          - filter: drop-shadow(0px 2px 2px rgba(0,0,0,0.3))
+          - border-left: 2px var(--color-blue) solid
+          - padding: 0px 0px 0px 0px
+          - left: 200px
+          - width: calc(100% + 0px)
+          - '--ha-card-border-width': 0px
+          - '--paper-card-background-color': rgba(0, 0, 0, 0.0)
+          - '--ha-card-background': rgba(0, 0, 0, 0.0)
+          - '--ha-card-box-shadow': none
+        titre_activite:
+          - filter: drop-shadow(0px 2px 2px rgba(0,0,0,0.3))
+          - padding: 10px 0px 01px 0px
+          - font-weight: bold
+          - justifiy-self: start
+          - text-align: left
+          - color: var(--title)
+          - white-space: normal
+        electricite:
+          - filter: drop-shadow(0px 2px 2px rgba(0,0,0,0.3))
+          - border-left: 2px var(--color-blue) solid
+          - white-space: normal
+          - text-align: left
+          - padding: 0px 0px 0px 08px
+          - justifiy-self: start
+          - color: lightgrey
+        serrure:
+          - filter: drop-shadow(0px 2px 2px rgba(0,0,0,0.3))
+          - border-left: 2px var(--color-blue) solid
+          - white-space: normal
+          - text-align: left
+          - padding: 0px 0px 0px 08px
+          - justifiy-self: start
+          - color: lightgrey
+        aspi_mode_vacances:
+          - filter: drop-shadow(0px 2px 2px rgba(0,0,0,0.3))
+          - border-left: 2px var(--color-blue) solid
+          - white-space: normal
+          - text-align: left
+          - padding: 0px 0px 0px 08px
+          - justifiy-self: start
+          - color: lightgrey
+        appareils:
+          - filter: drop-shadow(0px 2px 2px rgba(0,0,0,0.3))
+          - border-left: 2px var(--color-blue) solid
+          - white-space: normal
+          - text-align: left
+          - padding: 0px 0px 0px 08px
+          - justifiy-self: start
+          - color: lightgrey
+        courrier:
+          - filter: drop-shadow(0px 2px 2px rgba(0,0,0,0.3))
+          - border-left: 2px var(--color-blue) solid
+          - white-space: normal
+          - text-align: left
+          - padding: 0px 0px 0px 08px
+          - justifiy-self: start
+          - color: lightgrey
+        lumiere:
+          - filter: drop-shadow(0px 2px 2px rgba(0,0,0,0.3))
+          - border-left: 2px var(--color-blue) solid
+          - padding: 0px 0px 0px 08px
+          - justifiy-self: start
+          - color: |
+              [[[
+                if (states['light.all_lights'].state == 'off')
+                  return 'var(--text-off)';
+                return 'var(--text-on)';
+              ]]]
+          - white-space: normal
+          - text-align: left
+        mouvement:
+          - filter: drop-shadow(0px 2px 2px rgba(0,0,0,0.3))
+          - border-left: 2px var(--color-blue) solid
+          - padding: 0px 0px 0px 08px
+          - justifiy-self: start
+          - text-align: left
+          - color: |
+              [[[
+                if (states['binary_sensor.mouvements'].state == 'off')
+                  return 'var(--text-off)';
+                return 'var(--text-on)';
+              ]]]
+          - white-space: normal
+        porte:
+          - filter: drop-shadow(0px 2px 2px rgba(0,0,0,0.3))
+          - border-left: 2px var(--color-blue) solid
+          - padding: 0px 0px 0px 08px
+          - justifiy-self: start
+          - text-align: left
+          - color: |
+              [[[
+                if (states['binary_sensor.portes'].state == 'off')
+                  return 'var(--text-off)';
+                return 'var(--text-on)';
+              ]]]
+          - white-space: normal
+        rappel:
+          - filter: drop-shadow(0px 2px 2px rgba(0,0,0,0.3))
+          - border-left: 2px var(--color-blue) solid
+          - padding: 0px 0px 0px 08px
+          - justifiy-self: start
+          - text-align: left
+          - white-space: normal
+          - color: |
+              [[[
+                if (states['binary_sensor.portes'].state == 'off')
+                  return 'var(--text-off)';
+                return 'var(--text-on)';
+              ]]]
+        modes:
+          - filter: drop-shadow(0px 2px 2px rgba(0,0,0,0.3))
+          - border-left: 2px var(--color-blue) solid
+          - padding: 0px 0px 0px 08px
+          - justifiy-self: start
+          - text-align: left
+          - color: lightgrey
+          - white-space: normal
+        appareils_connectes:
+          - filter: drop-shadow(0px 2px 2px rgba(0,0,0,0.3))
+          - border-left: 2px var(--color-blue) solid
+          - padding: 0px 0px 0px 08px
+          - justifiy-self: start
+          - text-align: left
+          - color: lightgrey
+          - white-space: normal
+        appareils_charges:
+          - filter: drop-shadow(0px 2px 2px rgba(0,0,0,0.3))
+          - border-left: 2px var(--color-blue) solid
+          - padding: 0px 0px 0px 08px
+          - justifiy-self: start
+          - text-align: left
+          - color: lightgrey
+          - white-space: normal
+        titre_maj:
+          - filter: drop-shadow(0px 2px 2px rgba(0,0,0,0.3))
+          - padding: |
+              [[[
+                if (states['sensor.maj'].state == 'Aucune mise à jour' || states['input_boolean.header_show_maj'].state == 'off')
+                  return "0px" ;
+                return "10px 0px 01px 0px" 
+              ]]]
+          - font-weight: bold
+          - font-style: null
+          - justifiy-self: start
+          - text-align: left
+          - color: var(--title)
+          - white-space: normal
+        maj:
+          - filter: drop-shadow(0px 2px 2px rgba(0,0,0,0.3))
+          - border-left: 2px var(--color-blue) solid
+          - padding: 0px 0px 0px 08px
+          - justifiy-self: start
+          - text-align: left
+          - color: |
+              [[[
+                if (states['sensor.maj'].state == 'Aucune mise à jour')
+                  return "var(--text-off)" ;
+                return "var(--text-on)" 
+              ]]]
+          - white-space: normal
+        titre_savoir:
+          - filter: drop-shadow(0px 2px 2px rgba(0,0,0,0.3))
+          - padding: |
+              [[[
+                if (states['input_boolean.header_show_info'].state == 'off')
+                  return "0px" ;
+                return "10px 0px 01px 0px" 
+              ]]]
+          - font-weight: bold
+          - font-style: null
+          - justifiy-self: start
+          - text-align: left
+          - color: var(--title)
+          - white-space: normal
+        savoir:
+          - filter: drop-shadow(0px 2px 2px rgba(0,0,0,0.3))
+          - border-left: 2px var(--color-blue) solid
+          - padding: 0px 0px 0px 08px
+          - justifiy-self: start
+          - text-align: left
+          - color: lightgrey
+          - white-space: normal
+          - font-style: italic
+          - font-size: 13px
+          - line-height: 120%
+    custom_fields:
+      alerte: |
+        [[[
+          if (states['sensor.weather_alerte'].state == "Aucune" ) 
+            return ""
+          return states['sensor.weather_alerte_couleur_v2'].state+ "  "+states['sensor.weather_alerte'].state
+        ]]]
+      titre_programme: |
+        [[[return "Aujourd'hui " ]]]
+      anniv: |
+        [[[
+          if (states['sensor.anniversaire'].state == 'Aucun')
+            return "" 
+          return "🎉 " + states['sensor.anniversaire'].state
+        ]]]
+      calendrier: |
+        [[[ return  states['sensor.calendar_famille'].state
+        ]]]
+      poubelle: |
+        [[[ return  states['sensor.calendar_poubelles'].state
+        ]]]
+      titre_avertissement_rpi: |
+        [[[
+          if (states['sensor.averissement_rpi'].state == '')
+            return "" 
+          return "RPI" ;
+        ]]]
+      avertissement_rpi: |
+        [[[
+          if (states['sensor.averissement_rpi'].state == '')
+            return "" 
+          return states['sensor.averissement_rpi'].state ;
+        ]]]    
+      titre_avertissement_serrures_bloquees: |
+        [[[
+          if (states['sensor.serrures_bloquees'].state == '')
+            return "" 
+          return "RPI" ;
+        ]]]
+      serrures_bloquees: |
+        [[[
+          if (states['sensor.serrures_bloquees'].state == '')
+            return "" 
+          return states['sensor.serrures_bloquees'].state ;
+        ]]]   
+      titre_avertissement_erreur_aspi: |
+        [[[
+          if (states['sensor.erreur_aspi'].state == '')
+            return "" 
+          return "Aspi erreur " ;
+        ]]]
+      erreur_aspi: |
+        [[[
+          if (states['sensor.erreur_aspi'].state == '')
+            return "" 
+          return states['sensor.erreur_aspi'].state ;
+        ]]]        
+      titre_avertissement: |
+        [[[
+          if (states['sensor.systeme_avertissement'].state == '')
+            return "" 
+          return "Indisponible " ;
+        ]]]
+      device_hs: |
+        [[[
+          if (states['sensor.systeme_avertissement'].state == '')
+            return "" 
+          return states['sensor.systeme_avertissement'].state ;
+        ]]]
+      titre_batterie_faible: |
+        [[[
+          if (states['sensor.batterie_faible'].state == '')
+            return "" 
+          return "Batterie faible" ;
+        ]]]
+      batterie_faible: |
+        [[[
+          if (states['sensor.batterie_faible'].state == '')
+            return "" 
+          return states['sensor.batterie_faible'].state ;
+        ]]]
+      titre_enfants: |
+        [[[ 
+          if (states['input_boolean.nilemato'].state == "off" && states['input_boolean.reveils'].state == "off")
+            return ""
+          if (states['input_boolean.nilemato'].state == "off" && states['input_boolean.reveils'].state == "on")
+            return "Enfants absents"
+          return "Réveils et cours"
+        ]]]
+      reveils_et_cours_off: |
+        [[[ 
+          if (states['input_boolean.nilemato'].state == "on" && states['sensor.verif_reveils_cours'].state == "off")
+            return "Aucun réveil ni cours"
+          if (states['input_boolean.nilemato'].state == "off" && states['input_boolean.reveils'].state == "on")
+            return "<b>Attention, des réveils sont programmés</b>"
+          return ""
+        ]]]  
+      reveils_et_cours_on:
+        card:
+          type: conditional
+          conditions:
+            - entity: sensor.verif_reveils_cours
+              state: 'on'
+            - entity: input_boolean.nilemato
+              state: 'on'
+          card:
+            type: markdown
+            content: |2-
+               <table>
+               <tr>
+                {%- set time = states.sensor.time.state -%}
+
+                {%- set reveil_inayah = not is_state('sensor.inayah_reveil', 'Grasse mat !') -%}
+                {%- set tom_debut_cours = states.sensor.debut_des_cours_de_tom_aujourd_hui.state -%}
+                {%- set tom_aujourdhui = not is_state('sensor.debut_des_cours_de_tom_aujourd_hui', 'Pas cours') -%}    
+                {%- set tom_demain = not is_state('sensor.debut_des_cours_de_tom_demain', 'Pas cours') -%}             
+                {%- set fin_tom = states.sensor.fin_des_cours_de_tom_aujourd_hui.state -%}
+                {%- set tom_modif_aujourdhui = states.sensor.pronote_ahamada_nyla_timetable_today.attributes.canceled_lessons_counter  -%}
+                {%- set tom_modif_demain = states.sensor.pronote_ahamada_nyla_timetable_tomorrow.attributes.canceled_lessons_counter  -%}
+
+                {%- set reveil_nyla = not is_state('sensor.nyla_reveil', 'Grasse mat !') -%}
+                {%- set nyla_debut_cours = states.sensor.debut_des_cours_de_nyla_aujourd_hui.state -%}
+                {%- set nyla_aujourdhui = not is_state('sensor.debut_des_cours_de_nyla_aujourd_hui', 'Pas cours') -%}    
+                {%- set nyla_demain = not is_state('sensor.debut_des_cours_de_nyla_demain', 'Pas cours') -%} 
+                {%- set fin_nyla = states.sensor.fin_des_cours_de_nyla_aujourd_hui.state -%}
+                {%- set nyla_modif_aujourdhui = states.sensor.pronote_ahamada_nyla_timetable_today.attributes.canceled_lessons_counter  -%}
+                {%- set nyla_modif_demain = states.sensor.pronote_ahamada_nyla_timetable_tomorrow.attributes.canceled_lessons_counter  -%}
+
+                {%- set reveil_leane = not is_state('sensor.leane_reveil', 'Grasse mat !') -%}
+                {%- set leane_debut_cours = states.sensor.debut_des_cours_de_leane_aujourd_hui.state -%}
+                {%- set leane_aujourdhui = not is_state('sensor.debut_des_cours_de_leane_aujourd_hui', 'Pas cours') -%}    
+                {%- set leane_demain = not is_state('sensor.debut_des_cours_de_leane_demain', 'Pas cours') -%}
+                {%- set fin_leane = states.sensor.fin_des_cours_de_leane_aujourd_hui.state -%}
+                {%- set leane_modif_aujourdhui = states.sensor.pronote_ahamada_nyla_timetable_today.attributes.canceled_lessons_counter  -%}
+                {%- set leane_modif_demain = states.sensor.pronote_ahamada_nyla_timetable_tomorrow.attributes.canceled_lessons_counter  -%}            
+
+                {%- set reveil_maman_zakia = not is_state('sensor.maman_zakia_reveil', 'Grasse mat !') -%}
+                
+                
+                <td><b>Inayah</td>
+
+                <td><b>{%- if reveil_inayah == True -%}<font color = #00bfff>{%- else -%}<font color = "grey">{%- endif -%}<ha-icon icon="mdi:clock"></ha-icon></td>    
+                <td>{%- if reveil_inayah == True -%}{{ states.sensor.inayah_reveil_court.state }}{%- else -%}<font color = grey>Aucun{%- endif -%}</td>
+                <td><b>{%- if tom_aujourdhui == True and time < fin_tom -%}<font color = "#00bfff">{%- else -%}<font color = "grey">{%- endif -%}<ha-icon icon="mdi:pen"></ha-icon></td>
+                <td>{%- if tom_aujourdhui == True -%}
+                      {%- if time < fin_tom -%}
+                      {{ states.sensor.date_debut_des_cours_de_tom_aujourd_hui.state }} - {{ states.sensor.fin_des_cours_de_tom_aujourd_hui.state }}
+                      {%- else -%}
+                        {%- if tom_demain == True -%}
+                        <font color = darkgrey>{{ states.sensor.date_debut_des_cours_de_tom_demain.state }} - {{ states.sensor.fin_des_cours_de_tom_demain.state }} 
+                        {%- elif tom_demain == False -%}
+                        <font color = grey>Pas cours
+                        {%- endif -%}</font>            
+                      {%- endif -%}
+                    {%- elif tom_aujourdhui == False -%}               
+                      {%- if tom_demain == True -%}
+                      <font color = darkgrey>{{ states.sensor.date_debut_des_cours_de_tom_demain.state }} - {{ states.sensor.fin_des_cours_de_tom_demain.state }} 
+                      {%- elif tom_demain == False -%}
+                      <font color = grey>Pas cours
+                      {%- endif -%}
+                    {%- endif -%}</td>
+                    
+                <tr>
+                
+                <td><b>Nyla</td>           
+                <td><b>{%- if reveil_nyla == True -%}<font color = "#00bfff">{%- else -%}<font color = "grey">{%- endif -%}<ha-icon icon="mdi:clock"></ha-icon></td>    
+                <td>{%- if reveil_nyla == True -%}{{ states.sensor.nyla_reveil_court.state }}{%- else -%}<font color = grey>Aucun{%- endif -%}</td>  
+                <td><b>{%- if nyla_aujourdhui == True and time < fin_nyla -%}<font color = "#00bfff">{%- else -%}<font color = "grey">{%- endif -%}<ha-icon icon="mdi:pen"></ha-icon></td>  
+                <td>{%- if nyla_aujourdhui == True -%}
+                      {%- if time < fin_nyla -%}
+                      {{ states.sensor.date_debut_des_cours_de_nyla_aujourd_hui.state }} - {{ states.sensor.fin_des_cours_de_nyla_aujourd_hui.state }}
+                      {%- else -%}
+                        {%- if nyla_demain == True -%}
+                        <font color = darkgrey>{{ states.sensor.date_debut_des_cours_de_nyla_demain.state }} - {{ states.sensor.fin_des_cours_de_nyla_demain.state }} 
+                        {%- elif nyla_demain == False -%}
+                        <font color = grey>Pas cours
+                        {%- endif -%}</font>            
+                      {%- endif -%}
+                    {%- elif nyla_aujourdhui == False -%}               
+                      {%- if nyla_demain == True -%}
+                      <font color = darkgrey>{{ states.sensor.date_debut_des_cours_de_nyla_demain.state }} - {{ states.sensor.fin_des_cours_de_nyla_demain.state }} 
+                      {%- elif nyla_demain == False -%}
+                      <font color = grey>Pas cours
+                      {%- endif -%}
+                    {%- endif -%}</td>
+                    
+
+                <tr>
+                    
+                <tr>
+                
+                <td><b>maman_zakia</td>
+                <td><b>{%- if reveil_maman_zakia == True -%}<font color = "#00bfff">{%- else -%}<font color = "grey">{%- endif -%}<ha-icon icon="mdi:clock"></ha-icon></td>            
+                <td>{%- if reveil_maman_zakia == True -%}{{ states.sensor.maman_zakia_reveil_court.state }}{%- else -%}<font color = grey>Aucun{%- endif -%}</td> 
+                
+            card_mod:
+              style:
+                .: |
+                  ha-card ha-markdown {
+                    padding: 0px;
+                    --mdc-icon-size: 13px;
+                  }
+                  ha-card ha-markdown.no-header {
+                    padding: 0px;
+                  }
+                ha-markdown$: |
+                  table{
+                    border-collapse: collapse;
+                    font-weight:normal;
+                    font-size: 13px;
+                    font-family: Avenir;
+                    color: var(--text-on);
+                    letter-spacing: 0px;
+                    width: auto;
+                    outline: 0px solid #393c3d;
+                    margin-top: 0px;
+                  } td {
+                      padding: 0px 0px 0px 8px;
+                      text-align: left;  
+                  }
+                  tr {
+                      border-bottom: none;
+                      line-height: 19px;      
+                  }
+                  span {
+                      padding: 5px;
+                  }
+                  tr:nth-child(n+1) > td:nth-child(1) {
+                    text-align: left;
+                    padding: 0px 0px 0px 10px;
+                  }
+      titre_activite: |
+        [[[ return "Infos" 
+        ]]]
+      electricite: |
+        [[[
+          if (states['sensor.electricite_conso_veille'].state == "-1.0" )
+            return ""
+          if (states['sensor.electricite_conso_veille'].state == "unavailable" )
+            return ""        
+          return `<ha-icon
+            icon="mdi:flash"
+            style="width: 14px; color: var(--color-icon-blue); margin-right: 2px;">
+            </ha-icon><span> ${states['sensor.electricite_cout_jour_avec_abo'].state} € (${states["sensor.electricite_conso_kwh_arrondie"].state} kWh)</span>`
+        ]]]    
+      serrure: |
+        [[[
+          if (states['lock.serrures'].state == 'locked' || states['input_boolean.header_show_serrures'].state == 'off')
+            return ""
+          return `<ha-icon
+            icon="mdi:lock-open"
+            style="width: 14px; color: var(--color-icon-orange);  margin-right: 2px;">
+            </ha-icon><span> ${states['sensor.serrure_ouverte'].state}</span>`
+          if (states['lock.heater_sejour_child_lock'].state == 'jammed' || states['input_boolean.header_show_serrures'].state == 'off')
+            return ""
+          return `<ha-icon
+            icon="mdi:lock-alert"
+            style="width: 14px; color: var(--color-icon-red); margin-right: 2px;">
+            </ha-icon><span> ${states['sensor.serrure_bloquee'].state}</span>`
+        ]]]
+      aspi_mode_vacances: |
+        [[[
+          if (states['input_boolean.vacances'].state == 'off')
+            return ""
+          return `<ha-icon
+            icon="phu:roborock"
+            style="width: 14px; color: var(--color-icon-blue);  margin-right: 2px;">
+            </ha-icon><span>Prochain nettoyage : ${states['sensor.aspi_mode_vacances'].state}</span>`
+        ]]]
+      appareils: |
+        [[[
+          if (states['binary_sensor.appareils'].state == 'off' || states['input_boolean.header_show_appareils'].state == 'off')
+            return ""
+          return `<ha-icon
+            icon="mdi:connection"
+            style="width: 14px; color: var(--color-icon-blue);  margin-right: 2px;"> 
+            </ha-icon><span> ${states['sensor.appareils'].state}</span>`
+        ]]]
+      courrier: |
+        [[[
+          if (states['input_boolean.header_show_courrier'].state == 'off' )
+            return ""
+          if (states['input_boolean.header_show_courrier'].state == 'on' && states['input_boolean.courrier_releve'].state == 'off' && states['input_boolean.boite_aux_lettres_ouverte'].state == 'off')
+            return ""
+          if (states['input_boolean.header_show_courrier'].state == 'on' && states['input_boolean.courrier_releve'].state == 'on')
+            return `<ha-icon
+              icon="mdi:email"
+              style="width: 14px; color: var(--color-icon-blue);  margin-right: 2px;">
+              </ha-icon><span>Courrier relevé à ${states['sensor.courrier_releve'].state}</span>`
+          if (states['input_boolean.header_show_courrier'].state == 'on' && states['input_boolean.boite_aux_lettres_ouverte'].state == 'on')
+            return `<ha-icon
+              icon="mdi:email"
+              style="width: 14px; color: var(--color-icon-blue);  margin-right: 2px;">
+              </ha-icon><span>Boîte aux lettres ouverte à ${states['sensor.boite_aux_lettres_ouvertee'].state}</span>`
+        ]]]
+      lumiere: |
+        [[[
+          if (states['sensor.lumiere_etat'].state == 'Aucune' || states['input_boolean.header_show_lumiere'].state == 'off')
+            return ""
+          return `<ha-icon
+            icon="phu:bulb-group-filament-candle"
+            style="width: 14px; color: var(--color-icon-blue); margin-right: 2px;">
+            </ha-icon><span> ${states['sensor.lumiere_etat'].state}</span>`
+        ]]]
+      mouvement: |
+        [[[
+          if (states['sensor.mouv_on'].state == 'Aucun' || states['input_boolean.header_show_mouvement'].state == 'off')
+            return ""
+          return `<ha-icon
+            icon="mdi:run"
+            style="width: 14px; color: var(--color-blue);  margin-right: 2px;">
+            </ha-icon><span> ${states['sensor.mouv_on'].state}</span>`
+        ]]]
+      porte: |
+        [[[
+          if (states['sensor.porte_on'].state == 'Aucune'|| states['input_boolean.header_show_porte'].state == 'off')
+            return ""
+          return `<ha-icon
+            icon="mdi:door-open"
+            style="width: 14px; color: var(--color-icon-blue);  margin-right: 2px;">
+            </ha-icon><span> ${states['sensor.porte_on'].state}</span>`
+        ]]]
+      rappel: |
+        [[[
+          
+          if (states['sensor.rappel'].state == "")
+            return ""
+          if (states['sensor.rappel'].state == "unavailable")
+            return ""            
+          return `<ha-icon
+            icon="mdi:reminder"
+            style="width: 14px; color: var(--color-icon-blue);  margin-right: 2px;">
+            </ha-icon><span> ${states['sensor.rappel'].state}</span>`
+        ]]]
+      appareils_charges: |
+        [[[
+          if (states['sensor.appareils_charges'].state == '' || states['input_boolean.header_show_appareils_charges'].state == 'off')
+            return ""
+          return `<ha-icon
+            icon="mdi:battery-charging-100"
+            style="width: 14px; color: var(--color-icon-blue);  margin-right: 2px;">
+            </ha-icon><span> ${states['sensor.appareils_charges'].state}</span>`
+        ]]]
+      appareils_connectes: |
+        [[[
+          if (states['sensor.appareils_connectes'].state == 'Aucun' || states['input_boolean.header_show_connecte'].state == 'off')
+            return ""
+          return `<ha-icon
+            icon="mdi:laptop"
+            style="width: 14px; color: var(--color-icon-blue);  margin-right: 2px;">
+            </ha-icon><span> ${states['sensor.appareils_connectes'].state}</span>` 
+        ]]]
+      modes: |
+        [[[
+          if (states['sensor.modes'].state == 'Aucun'|| states['input_boolean.header_show_mode'].state == 'off')
+            return ""
+          return `<ha-icon
+            icon="mdi:order-bool-descending-variant"
+            style="width: 14px; color: var(--color-icon-blue);  margin-right: 2px; ">
+            </ha-icon><span> ${states['sensor.modes'].state}</span>`
+        ]]]
+      titre_maj: |
+        [[[ 
+          if (states['sensor.maj'].state == 'Aucune mise à jour' || states['input_boolean.header_show_maj'].state == 'off')
+            return "" 
+          return "Mise à jour"
+        ]]]
+      maj: |
+        [[[ 
+          if (states['sensor.maj'].state == 'Aucune mise à jour' || states['input_boolean.header_show_maj'].state == 'off')
+            return "" 
+          return states['sensor.maj'].state  
+        ]]]
+      titre_savoir: |
+        [[[ 
+          if (states['input_boolean.header_show_info'].state == 'off')
+            return "" 
+          return "Savoir Inutile"
+        ]]]
+      savoir: |
+        [[[ 
+          if (states['input_boolean.header_show_info'].state == 'off')
+            return "" 
+          return states['sensor.web_scrape'].state  
+        ]]]             
+      devices:
+        card:
+          type: horizontal-stack
+          cards:
+            - type: custom:button-card
+              entity: input_boolean.musique
+              icon: mdi:speaker
+              show_label: false
+              template:
+                - info_header
+                - icon_state
+              tap_action:
+                action: navigate
+                navigation_path: /lovelace/Musique
+              custom_fields:
+                notification: >
+                  [[[ return Math.floor(states['sensor.compteur_musique'].state
+                  ) ]]]                    
+            - type: custom:button-card
+              entity: media_player.tvs_salon
+              show_name: false
+              show_label: false
+              show_state: false
+              template:
+                - info_header
+                - icon_state
+              tap_action:
+                action: more-info
+              custom_fields:
+                notification: >
+                  [[[ return Math.floor(states['sensor.compteur_tv'].state )
+                  ]]]                    
+            - type: custom:button-card
+              entity: binary_sensor.machines
+              icon: mdi:dishwasher
+              show_name: false
+              show_label: false
+              show_state: false
+              template:
+                - info_header
+                - icon_state
+              tap_action:
+                action: navigate
+                navigation_path: /lovelace/Appareils
+              custom_fields:
+                notification: >
+                  [[[ return Math.floor(states['sensor.compteur_machines'].state
+                  ) ]]]          
+            - type: conditional
+              conditions:
+                - entity: input_boolean.imprimante
+                  state: 'on'
+              card:
+                type: custom:button-card
+                entity: input_boolean.imprimante
+                icon: null
+                show_name: false
+                show_label: false
+                show_state: false
+                template:
+                  - info_header
+                  - icon_state
+                tap_action:
+                  action: navigate
+                  navigation_path: /lovelace/Appareils
+            - type: conditional
+              conditions:
+                - entity: switch.radiateur
+                  state: 'on'
+              card:
+                type: custom:button-card
+                entity: switch.radiateur
+                icon: null
+                show_name: false
+                show_label: false
+                show_state: false
+                template:
+                  - info_header
+                  - icon_state
+                tap_action:
+                  action: navigate
+                  navigation_path: /lovelace/Appareils
+            - type: conditional
+              conditions:
+                - entity: switch.moustiques
+                  state: 'on'
+              card:
+                type: custom:button-card
+                entity: switch.moustiques
+                icon: mdi:spray
+                show_name: false
+                show_label: false
+                show_state: false
+                template:
+                  - info_header
+                  - icon_state
+                tap_action:
+                  action: navigate
+                  navigation_path: /lovelace/Appareils
+                custom_fields:
+                  notification: >
+                    [[[ return
+                    Math.floor(states['sensor.compteur_moustique'].state )
+                    ]]]                   
+      boutons:
+        card:
+          type: horizontal-stack
+          cards:
+            - type: custom:button-card
+              entity: alarm_control_panel.alarmo
+              icon: mdi:shield-check-outline
+              show_label: false
+              template:
+                - sub_button
+                - sub_button_state
+            - type: custom:button-card
+              entity: binary_sensor.home_assistant_versions_update_available
+              icon: mdi:home-assistant
+              show_label: false
+              template:
+                - sub_button
+                - sub_button_state
+              styles:
+                icon:
+                  - color: |
+                      [[[
+                        if (states['binary_sensor.home_assistant_versions_update_available'].state == "on" || states['update.home_assistant_supervisor_update'].state == "on" || states['update.home_assistant_operating_system_update'].state == "on")
+                          return 'var(--color-icon-blue)'
+                        return 'var(--icon-off)'
+                      ]]]                      
+              tap_action:
+                action: navigate
+                navigation_path: /lovelace/systeme
+              double_tap_action:
+                action: call-service
+                service: input_boolean.toggle
+                service_data:
+                  entity_id: input_boolean.header_show_maj
+            - type: custom:button-card
+              entity: sensor.hacs
+              icon: mdi:package-variant
+              show_label: false
+              template:
+                - sub_button
+                - sub_button_state
+              tap_action:
+                action: navigate
+                navigation_path: /lovelace/systeme
+              double_tap_action:
+                action: call-service
+                service: input_boolean.toggle
+                service_data:
+                  entity_id: input_boolean.header_show_maj
+            - type: custom:button-card
+              icon: mdi:qrcode
+              show_label: false
+              template:
+                - sub_button
+              label: wifi
+              tap_action:
+                action: navigate
+                navigation_path: /lovelace/invités
+            - type: custom:button-card
+              entity: event.annonces
+              icon: mdi:message-processing-outline
+              show_label: false
+              template:
+                - sub_button
+                - sub_button_state
+              tap_action:
+                action: navigate
+                navigation_path: /lovelace/Annonces
+            - type: custom:button-card
+              entity: binary_sensor.mode
+              show_label: false
+              template:
+                - sub_button
+                - sub_button_state
+              label: |
+                [[[ return states['sensor.compteur_modes'].state ]]]
+              tap_action:
+                action: navigate
+                navigation_path: /lovelace/reglages
+            - type: custom:button-card
+              icon: mdi:cog-outline
+              show_label: false
+              template:
+                - sub_button
+              label: Réglage
+              tap_action:
+                action: navigate
+                navigation_path: /lovelace/reglages
+  - type: horizontal-stack
+    cards:
+      - type: conditional
+        conditions:
+          - condition: state
+            entity: sensor.echo_combles_next_timer
+            state_not: unavailable
+          - condition: state
+            entity: sensor.echo_combles_next_timer
+            state_not: unknown
+        card:
+          type: custom:button-card
+          entity: sensor.minuteur_bureau
+          name: Bureau
+          icon: mdi:timer-sand
+          show_state: true
+          show_label: false
+          show_last_update: false
+          template:
+            - ball_card
+      - type: conditional
+        conditions:
+          - condition: state
+            entity: sensor.echo_cuisine_next_timer
+            state_not: unavailable
+          - condition: state
+            entity: sensor.echo_cuisine_next_timer
+            state_not: unknown
+        card:
+          type: custom:button-card
+          entity: sensor.minuteur_cuisine
+          name: Cuisine
+          icon: mdi:timer-sand
+          show_state: true
+          show_label: false
+          show_last_update: false
+          template:
+            - ball_card
+      - type: conditional
+        conditions:
+          - condition: state
+            entity: sensor.echo_diner_droite_next_timer
+            state_not: unavailable
+          - condition: state
+            entity: sensor.echo_diner_gauche_next_timer
+            state_not: unknown
+        card:
+          type: custom:button-card
+          entity: sensor.minuteur_salon
+          name: Salon
+          icon: mdi:timer-sand
+          show_state: true
+          show_label: false
+          show_last_update: false
+          template:
+            - ball_card
+      - type: conditional
+        conditions:
+          - condition: state
+            entity: sensor.echo_diner_droite_next_timer
+            state_not: unavailable
+          - condition: state
+            entity: sensor.echo_diner_droite_next_timer
+            state_not: unknown
+        card:
+          type: custom:button-card
+          entity: sensor.minuteur_fire_tv
+          name: Fire TV
+          icon: mdi:timer-sand
+          show_state: true
+          show_label: false
+          show_last_update: false
+          template:
+            - ball_card
+      - type: conditional
+        conditions:
+          - entity: sensor.la_salle_de_bain_next_timer
+            state_not: unavailable
+          - entity: sensor.la_salle_de_bain_next_timer
+            state_not: unknown
+        card:
+          type: custom:button-card
+          entity: sensor.minuteur_sdb
+          name: SDB
+          icon: mdi:timer-sand
+          show_state: true
+          show_label: false
+          show_last_update: false
+          template:
+            - ball_card
+      - type: conditional
+        conditions:
+          - condition: state
+            entity: sensor.echo_parents_next_timer
+            state_not: unavailable
+          - condition: state
+            entity: sensor.echo_parents_next_timer
+            state_not: unknown
+        card:
+          type: custom:button-card
+          entity: sensor.minuteur_bidalos
+          name: Bida
+          icon: mdi:timer-sand
+          show_state: true
+          show_label: false
+          show_last_update: false
+          template:
+            - ball_card
+      - type: conditional
+        conditions:
+          - entity: sensor.maman_next_timer
+            state_not: unavailable
+          - entity: sensor.maman_next_timer
+            state_not: unknown
+        card:
+          type: custom:button-card
+          entity: sensor.minuteur_nessa
+          name: Nessa
+          icon: mdi:timer-sand
+          show_state: true
+          show_label: false
+          show_last_update: false
+          template:
+            - ball_card
+      - type: conditional
+        conditions:
+          - condition: state
+            entity: sensor.echo_inayah_next_timer
+            state_not: unavailable
+          - condition: state
+            entity: sensor.echo_inayah_next_timer
+            state_not: unknown
+        card:
+          type: custom:button-card
+          entity: sensor.minuteur_inayah
+          name: Inayah
+          icon: mdi:timer-sand
+          show_state: true
+          show_label: false
+          show_last_update: false
+          template:
+            - ball_card
+      - type: conditional
+        conditions:
+          - entity: sensor.maman_zakia_next_timer
+            state_not: unavailable
+          - entity: sensor.maman_zakia_next_timer
+            state_not: unknown
+        card:
+          type: custom:button-card
+          entity: sensor.minuteur_maman_zakia
+          name: maman_zakia
+          icon: mdi:timer-sand
+          show_state: true
+          show_label: false
+          show_last_update: false
+          template:
+            - ball_card
+      - type: conditional
+        conditions:
+          - entity: sensor.leane_next_timer
+            state_not: unavailable
+          - entity: sensor.leane_next_timer
+            state_not: unknown
+        card:
+          type: custom:button-card
+          entity: sensor.minuteur_leane
+          name: Léane
+          icon: mdi:timer-sand
+          show_state: true
+          show_label: false
+          show_last_update: false
+          template:
+            - ball_card
+      - type: conditional
+        conditions:
+          - entity: sensor.nyla_next_timer
+            state_not: unavailable
+          - entity: sensor.nyla_next_timer
+            state_not: unknown
+        card:
+          type: custom:button-card
+          entity: sensor.minuteur_nyla
+          name: nyla
+          icon: mdi:timer-sand
+          show_state: true
+          show_label: false
+          show_last_update: false
+          template:
+            - ball_card
