@@ -1,0 +1,1384 @@
+type: vertical-stack
+cards:
+  - type: custom:button-card
+    template:
+      - title_card
+    styles:
+      card:
+        - margin-top: 3px
+      name:
+        - justify-self: middle
+    name: |
+      [[[ return states['sensor.bonjour'].state ]]]
+  - type: custom:vertical-stack-in-card
+    cards:
+      - type: custom:button-card
+        template:
+          - around_card
+          - around_clear_card
+        styles:
+          card:
+            - padding: 0
+        custom_fields:
+          info:
+            card:
+              type: horizontal-stack
+              cards:
+                - type: custom:button-card
+                  tap_action:
+                    action: navigate
+                    navigation_path: /lovelace/Calendrier
+                  label: >
+                    [[[return states['sensor.date_jour'].state + "
+                    "+states['sensor.date_numero'].state + " " +
+                    states['sensor.date_mois_court'].state +"." ]]] 
+                  template:
+                    - badge_card
+                    - no_style
+                  show_icon: false
+                  styles:
+                    card:
+                      - padding: 0px 06px
+                    label:
+                      - margin-top: 6px
+                - type: custom:button-card
+                  tap_action:
+                    action: navigate
+                    navigation_path: /lovelace/air
+                  entity: sensor.qualite_air_pourcentage
+                  label: >
+                    [[[return
+                    (states['sensor.qualite_air_pourcentage'].state*1).toFixed(1)
+                    + " %" ]]] 
+                  icon: mdi:blur
+                  template:
+                    - badge_auto_card
+                    - no_style
+                    - air_mini_card_state
+                - type: custom:button-card
+                  tap_action:
+                    action: navigate
+                    navigation_path: /lovelace/Temp
+                  entity: sensor.temp_moyenne_maison
+                  label: >
+                    [[[return
+                    (states['sensor.temp_moyenne_maison'].state*1).toFixed(1) +
+                    " °C" ]]] 
+                  icon: mdi:home-thermometer
+                  template:
+                    - badge_auto_card
+                    - no_style
+                    - temperature_mini_card_state
+      - type: custom:button-card
+        template:
+          - around_card
+          - around_clear_card
+        styles:
+          card:
+            - padding: 0
+        custom_fields:
+          info:
+            card:
+              type: horizontal-stack
+              cards:
+                - type: custom:button-card
+                  tap_action:
+                    action: navigate
+                    navigation_path: /lovelace/Calendrier
+                  label: |
+                    [[[return states['sensor.time'].state  ]]]
+                  template:
+                    - badge_card
+                    - no_style
+                  show_icon: false
+                  styles:
+                    card:
+                      - line-height: 20px
+                    label:
+                      - font-size: 20px
+                      - font-weight: 600
+                - type: custom:button-card
+                  tap_action:
+                    action: navigate
+                    navigation_path: /lovelace/Calendrier
+                  entity: weather.vigneux_sur_seine
+                  label: |
+                    [[[return states['sensor.weather_temperature'].state + "° "
+                      +states['sensor.weather_conditions'].state]]]
+                  template:
+                    - badge_auto_card
+                    - no_style
+                    - weather_icon
+                  show_entity_picture: true
+                  styles:
+                    img_cell:
+                      - overflow: visible
+                      - margin-right: 10px
+                    icon:
+                      - width: 35px
+      - type: conditional
+        conditions:
+          - condition: state
+            entity: sensor.91_weather_alert
+            state_not: Vert
+        card:
+          type: custom:button-card
+          tap_action:
+            action: navigate
+            navigation_path: /lovelace/Calendrier
+          entity: sensor.91_weather_alert
+          icon: mdi:alert
+          show_icon: true
+          template:
+            - badge_card
+            - no_style
+          label: |
+            [[[
+              let alerts = states['sensor.91_weather_alert'].attributes;
+              let alertMessages = [];
+
+              for (const attribut of ['Vent violent', 'Orages', 'Inondation', 'Pluie-inondation', 'Neige-verglas', 'Canicule', 'Grand-froid', 'Avalanches', 'Vagues-submersion']) {
+                if (alerts[attribut] !== 'Vert' && alerts[attribut] !== undefined) {
+                  alertMessages.push(`${attribut}`);
+                }
+              }
+
+              if (states['sensor.91_weather_alert'].state != 'Vert')
+              return alertMessages.join(' / ');
+            ]]]
+          styles:
+            label:
+              - color: |
+                  [[[
+                    if (states['sensor.91_weather_alert'].state == 'Vert')
+                      return 'lightgrey';
+                    if (states['sensor.91_weather_alert'].state == 'Jaune')
+                      return 'var(--yellow)';  
+                    if (states['sensor.91_weather_alert'].state == 'Orange')
+                      return 'var(--orange)';     
+                    if (states['sensor.91_weather_alert'].state == 'Rouge')
+                      return 'var(--red)';               
+                  ]]]
+  - type: custom:button-card
+    template:
+      - around_card
+    custom_fields:
+      info:
+        card:
+          type: horizontal-stack
+          cards:
+            - type: custom:button-card
+              tap_action:
+                action: navigate
+                navigation_path: /lovelace/Alarmes
+              entity: alarm_control_panel.alarmo
+              double_tap_action:
+                action: more-info
+              show_label: false
+              template:
+                - mini_card
+                - security_mini_card_state
+                - custom_state
+              icon: |
+                [[[
+                  var entity = states['alarm_control_panel.alarmo'].state;
+                  if (entity == "disarmed" )
+                    return "mdi:shield-off";
+                  if (entity == "armed_away" )
+                    return "mdi:shield-lock";
+                  if (entity  == "armed_home" )
+                    return "mdi:shield-home";
+                  if (entity  == "armed_night" )
+                    return "mdi:shield-moon";
+                  if (entity  == "arming" )
+                    return "mdi:shield-half-full";
+                  if (entity  == "triggered" )
+                    return "mdi:shield-alert";
+                  return "mdi:shield-off";
+                ]]]
+              custom_fields:
+                notification: >
+                  [[[ return Math.floor(states['sensor.compteur_home'].state )
+                  ]]]  
+            - type: custom:button-card
+              double_tap_action:
+                action: navigate
+                navigation_path: /lovelace/Alarmes
+              tap_action:
+                action: more-info
+              entity: alarm_control_panel.blink_blink_maison
+              show_label: false
+              template:
+                - mini_card
+                - security_mini_card_state
+                - custom_state
+              name: Sonnette
+              icon: phu:arlo-video-doorbell
+              custom_fields:
+                notification: >
+                  [[[ return Math.floor(states['sensor.garage_th_battery'].state
+                  ) ]]]
+            - type: custom:button-card
+              tap_action:
+                action: navigate
+                navigation_path: /lovelace/Lumières
+              double_tap_action:
+                action: more-info
+              entity: light.all_lights
+              template:
+                - mini_card
+                - light_mini_card_state
+              show_name: false
+              show_label: false
+              custom_fields:
+                notification: >
+                  [[[ return Math.floor(states['sensor.compteur_lumiere'].state
+                  ) ]]] 
+            - type: custom:button-card
+              tap_action:
+                action: navigate
+                navigation_path: /lovelace/porte_mouv_serrure
+              double_tap_action:
+                action: more-info
+              entity: binary_sensor.portes
+              show_label: false
+              template:
+                - mini_card
+                - security_mini_card_state
+                - custom_state
+                - custom_icon
+              custom_fields:
+                notification: >
+                  [[[ return Math.floor(states['sensor.compteur_portes'].state )
+                  ]]]            
+            - type: custom:button-card
+              tap_action:
+                action: navigate
+                navigation_path: /lovelace/porte_mouv_serrure
+              double_tap_action:
+                action: more-info
+              entity: lock.heater_parents_child_lock
+              show_label: false
+              template:
+                - mini_card
+                - security_mini_card_state
+                - custom_state
+              icon: |
+                [[[ 
+                  if (states['lock.heater_parents_child_lock'].state == 'unlocked')
+                    return "mdi:lock-open"
+                  return "mdi:lock"
+                ]]]  
+              styles:
+                icon:
+                  - animation: |
+                      [[[
+                        if (states['lock.heater_parents_child_lock'].state == 'jammed')
+                          return 'blink 0.8s ease infinite'  
+                      ]]]                           
+            - type: custom:button-card
+              tap_action:
+                action: navigate
+                navigation_path: /lovelace/porte_mouv_serrure
+              double_tap_action:
+                action: more-info
+              entity: binary_sensor.mouvements
+              show_label: false
+              template:
+                - mini_card
+                - security_mini_card_state
+                - custom_state
+                - custom_icon
+              name: Présences
+              custom_fields:
+                notification: >
+                  [[[ return
+                  Math.floor(states['sensor.compteur_mouvement'].state ) ]]]  
+  - type: conditional
+    conditions:
+      - entity: alarm_control_panel.alarmo
+        state_not: disarmed
+    card:
+      type: custom:vertical-stack-in-card
+      cards:
+        - square: false
+          columns: 2
+          type: grid
+          cards:
+            - type: picture-glance
+              aspect_ratio: 60%
+              camera_image: camera.sonnette
+              camera_view: auto
+              entities: []
+              card_mod:
+                style: |
+                  ha-card { 
+                    margin: 0px 3px;
+                    overflow: hidden !important;
+                    border-radius: 15px !important;
+                  }
+                  ha-card > div.box {
+                    display: none;
+                  }
+            - type: picture-glance
+              aspect_ratio: 60%
+              camera_image: camera.entree
+              camera_view: auto
+              entities: []
+              card_mod:
+                style: |
+                  ha-card { 
+                    margin: 0px 3px;
+                    overflow: hidden !important;
+                    border-radius: 15px !important;
+                  }
+                  ha-card > div.box {
+                    display: none;
+                  }
+            - type: picture-glance
+              camera_image: camera.entree
+              camera_view: live
+              entities: []
+              card_mod:
+                style: |
+                  ha-card { 
+                    margin: 0px 3px;
+                    overflow: hidden !important;
+                    border-radius: 15px !important;
+                  }
+                  ha-card > div.box {
+                    display: none;
+                  }
+            - type: picture-glance
+              camera_image: camera.inayah
+              camera_view: live
+              entities: []
+              card_mod:
+                style: |
+                  ha-card { 
+                    margin: 0px 3px;
+                    overflow: hidden !important;
+                    border-radius: 15px !important;
+                  }
+                  ha-card > div.box {
+                    display: none;
+                  }
+      card_mod:
+        style: |
+          ha-card {
+            background: none;
+            margin: -10px 20px 10px 20px;
+            overflow: hidden !important;
+            border-radius: 24px !important;
+          }
+  - type: conditional
+    conditions:
+      - entity: camera.sonnette
+        state: armed_away
+      - entity: alarm_control_panel.alarmo
+        state: disarmed
+    card:
+      type: custom:vertical-stack-in-card
+      cards:
+        - entity: camera.sonnette
+          title: Sonnette
+          hide:
+            - date
+          global: small
+          image_click: play
+          image_view: arlo-stream
+          show:
+            - image_date
+            - motion
+            - snapshot
+          top_date: true
+          top_status: false
+          top_title: false
+          type: custom:aarlo-glance
+      card_mod:
+        style: |
+          ha-card {
+
+            margin: -10px 20px 0px 20px;
+            overflow: hidden !important;
+            border-radius: 24px !important;
+          }
+  - type: horizontal-stack
+    cards:
+      - type: custom:decluttering-card
+        template: next_timer
+        variables:
+          - entity: sensor.echo_combles_next_timer
+          - sensor: sensor.echo_combles_next_timer
+          - name: Bureau
+      - type: custom:decluttering-card
+        template: next_timer
+        variables:
+          - entity: sensor.echo_cuisine_next_timer
+          - sensor: sensor.minuteur_cuisine
+          - name: Cuisine
+      - type: custom:decluttering-card
+        template: next_timer
+        variables:
+          - entity: sensor.echo_diner_gauche_next_timer
+          - sensor: sensor.minuteur_salon
+          - name: Salon
+      - type: custom:decluttering-card
+        template: next_timer
+        variables:
+          - entity: sensor.echo_inayah_next_timer
+          - sensor: sensor.minuteur_sdb
+          - name: SDB
+      - type: custom:decluttering-card
+        template: next_timer
+        variables:
+          - entity: sensor.echo_parents_next_timer
+          - sensor: sensor.minuteur_aurel
+          - name: Bida
+      - type: custom:decluttering-card
+        template: next_timer
+        variables:
+          - entity: sensor.maman_next_timer
+          - sensor: sensor.minuteur_alex
+          - name: Nessa
+      - type: custom:decluttering-card
+        template: next_timer
+        variables:
+          - entity: sensor.echo_inayah_next_timer
+          - sensor: sensor.minuteur_tom
+          - name: Inayah
+      - type: custom:decluttering-card
+        template: next_timer
+        variables:
+          - entity: sensor.echo_chambre_jaune_next_timer
+          - sensor: sensor.minuteur_nina
+          - name: Ch rouge
+      - type: custom:decluttering-card
+        template: next_timer
+        variables:
+          - entity: sensor.echo_chambre_jaune_next_timer
+          - sensor: sensor.minuteur_leane
+          - name: Léane
+      - type: custom:decluttering-card
+        template: next_timer
+        variables:
+          - entity: sensor.echo_chambre_jaune_next_timer
+          - sensor: sensor.minuteur_manon
+          - name: Ch jaune
+  - type: custom:vertical-stack-in-card
+    cards:
+      - type: custom:button-card
+        template:
+          - title_activity_card
+        icon: mdi:calendar
+        label: |
+          [[[ return  "Programme" ]]]
+        tap_action:
+          action: navigate
+          navigation_path: /lovelace/Calendrier
+        styles:
+          card:
+            - - margin-top: 5px
+      - type: custom:button-card
+        template:
+          - separator_activity_card
+      - type: custom:button-card
+        tap_action:
+          action: navigate
+          navigation_path: /lovelace/Calendrier
+        template:
+          - sensor_activity_card
+        entity: sensor.calendrier_famille
+        name: Calendrier familial
+        label: |
+          [[[ return  states['sensor.calendrier_famille'].state ]]]
+        show_icon: true
+        custom_fields:
+          name: |
+            [[[ return  states['sensor.calendrier_famille_jour'].state ]]]    
+          label: |
+            [[[ return  states['sensor.calendrier_famille_date'].state ]]]    
+          bubble: ●
+        styles:
+          custom_fields:
+            bubble:
+              - color: |
+                  [[[ 
+                    if (states['sensor.calendrier_famille_date'].state == states['sensor.date_numero'].state )
+                      return "var(--blue)"
+                    return "transparent"
+                  ]]]
+            name:
+              - position: absolute
+              - left: 10px
+              - top: 10px
+              - font-weight: null
+              - color: var(--text-on)
+              - font-size: 7px
+              - text-transform: uppercase
+            label:
+              - position: absolute
+              - left: 10px
+              - top: 16px
+              - font-weight: 500
+              - font-size: 14px
+              - color: var(--text-on)
+          icon:
+            - color: transparent
+      - type: conditional
+        conditions:
+          - condition: state
+            entity: sensor.anniversaire
+            state_not: Aucun
+        card:
+          type: custom:button-card
+          template:
+            - sensor_activity_card
+          entity: sensor.anniversaire
+          name: Anniversaire
+          label: |
+            [[[ return  states['sensor.anniversaire'].state ]]]
+          icon: mdi:party-popper
+      - type: custom:button-card
+        tap_action:
+          action: navigate
+          navigation_path: /lovelace/Calendrier
+        template:
+          - sensor_activity_card
+        entity: sensor.calendrier_des_poubelles
+        name: Poubelles
+        label: |
+          [[[
+              return `<ha-icon
+              icon="mdi:trash-can-outline"
+              style="width: 14px; height: 16px; color: var(--icon-off); margin-top: -2px ;vertical-align: top;"> 
+              </ha-icon> <span> ${states['sensor.passage_dechets_menagers'].state} </span>
+              <ha-icon
+              icon="mdi:recycle"
+              style="width: 14px; height: 16px; color: var(--icon-off); margin-top: -2px ;vertical-align: top;"> 
+              </ha-icon> <span> ${states['sensor.passage_tri_selectif'].state}</span>`          
+          ]]]
+        icon: mdi:delete-outline
+        custom_fields:
+          bubble: ●
+        styles:
+          label:
+            - margin-top: '-1px'
+          custom_fields:
+            bubble:
+              - color: |
+                  [[[ 
+                    if (states['calendar.dechets_menagers'].state == "on" )
+                      return "var(--green)"
+                    if (states['calendar.tri_selectif'].state == "on")
+                      return "var(--yellow)"
+                    return "transparent"
+                  ]]]
+      - type: conditional
+        conditions:
+          - condition: state
+            entity: sensor.compteur_rappel
+            state_not: '0'
+        card:
+          type: custom:button-card
+          template:
+            - sensor_activity_card
+          entity: sensor.rappel
+          name: Rappel
+          label: |
+            [[[ return  states['sensor.rappel'].state ]]]
+          icon: mdi:clock-outline
+      - type: conditional
+        conditions:
+          - condition: and
+            conditions:
+              - condition: state
+                entity: sensor.vacances_scolaires_verif_si_bientot
+                state: 'true'
+        card:
+          type: custom:button-card
+          tap_action:
+            action: navigate
+            navigation_path: /lovelace/Calendrier
+          template:
+            - sensor_activity_card
+          entity: sensor.vacances_scolaires
+          name: Vacances
+          label: >
+            [[[ return 
+            states['sensor.calendrier_vacances_scolaires_detaillees'].state ]]]
+          icon: mdi:beach
+      - type: conditional
+        conditions:
+          - condition: and
+            conditions:
+              - condition: state
+                entity: sensor.verif_avertissement
+                state: 'false'
+        card:
+          type: custom:button-card
+          template:
+            - title_activity_card
+          icon: mdi:alert
+          label: |
+            [[[ return  "Avertissement" ]]]
+          styles:
+            icon:
+              - color: var(--red)
+            label:
+              - color: var(--red)
+      - type: conditional
+        conditions:
+          - condition: and
+            conditions:
+              - condition: state
+                entity: sensor.verif_avertissement
+                state: 'false'
+        card:
+          type: custom:button-card
+          template:
+            - separator_activity_card
+      - type: conditional
+        conditions:
+          - condition: state
+            entity: sensor.systeme_avertissement
+            state_not: OK
+        card:
+          type: custom:button-card
+          template:
+            - sensor_alert_activity_card
+          entity: sensor.systeme_avertissement
+          name: Indisponibles
+          label: |
+            [[[
+              if (states['sensor.systeme_avertissement'].state == '')
+                return "Aucun" 
+              return states['sensor.systeme_avertissement'].state ;
+            ]]]    
+          icon: mdi:skull-crossbones-outline
+          tap_action:
+            action: navigate
+            navigation_path: /lovelace/systeme
+      - type: conditional
+        conditions:
+          - condition: state
+            entity: sensor.avertissement_rpi
+            state_not: OK
+        card:
+          type: custom:button-card
+          template:
+            - sensor_alert_activity_card
+          entity: sensor.avertissement_rpi
+          name: Raspberry
+          label: |
+            [[[ return states['sensor.avertissement_rpi'].state ]]]    
+          icon: mdi:raspberry-pi
+          tap_action:
+            action: navigate
+            navigation_path: /lovelace/systeme
+      - type: conditional
+        conditions:
+          - condition: state
+            entity: sensor.spook
+            state_not: 'false'
+        card:
+          type: custom:button-card
+          template:
+            - sensor_alert_activity_card
+          entity: sensor.spook
+          name: Spook
+          label: |
+            [[[ return states['sensor.spook'].state ]]]    
+          icon: mdi:ghost-outline
+          tap_action:
+            action: navigate
+            navigation_path: /lovelace/systeme
+      - type: conditional
+        conditions:
+          - condition: state
+            entity: sensor.fuites_eau
+            state_not: OK
+        card:
+          type: custom:button-card
+          template:
+            - sensor_alert_activity_card
+          entity: binary_sensor.fuites_d_eau_water_leak
+          name: Fuite d'eau
+          label: |
+            [[[ return states['sensor.fuites_eau'].state ]]]    
+          icon: mdi:water-alert
+      - type: conditional
+        conditions:
+          - condition: state
+            entity: sensor.batterie_faible
+            state_not: Aucune
+        card:
+          type: custom:button-card
+          template:
+            - sensor_alert_activity_card
+          entity: sensor.batterie_faible
+          name: Batteries faibles
+          label: |
+            [[[ return states['sensor.batterie_faible'].state ]]]    
+          icon: mdi:battery-low
+          tap_action:
+            action: navigate
+            navigation_path: /lovelace/batteries
+      - type: conditional
+        conditions:
+          - condition: state
+            entity: sensor.serrures_bloquees
+            state_not: OK
+        card:
+          type: custom:button-card
+          template:
+            - sensor_alert_activity_card
+          entity: lock.serrures
+          name: Serrures bloquées
+          label: |
+            [[[ return  states['sensor.serrures_bloquees'].state ]]]
+          icon: mdi:lock-alert
+          tap_action:
+            action: navigate
+            navigation_path: /lovelace/porte_mouv_serrure
+      - type: conditional
+        conditions:
+          - condition: or
+            conditions:
+              - condition: state
+                entity: vacuum.wall_e
+                state: error
+              - condition: state
+                entity: vacuum.r2d2
+                state: error
+        card:
+          type: custom:button-card
+          template:
+            - sensor_alert_activity_card
+          entity: group.aspis
+          name: Aspis
+          label: |
+            [[[ return states['sensor.erreur_aspi'].state ]]]    
+          icon: mdi:vacuum-outline
+      - type: conditional
+        conditions:
+          - condition: state
+            entity: sensor.avertissement_humidite_plantes
+            state_not: OK
+        card:
+          type: custom:button-card
+          template:
+            - sensor_alert_activity_card
+          entity: sensor.avertissement_humidite_plantes
+          name: Plantes
+          label: >
+            [[[ return states['sensor.avertissement_humidite_plantes'].state
+            ]]]    
+          icon: mdi:watering-can-outline
+          tap_action:
+            action: navigate
+            navigation_path: /lovelace/Plantes
+      - type: custom:button-card
+        template:
+          - title_activity_card
+        icon: mdi:home-outline
+        label: |
+          [[[ return  "Maison" ]]]
+        tap_action:
+          action: navigate
+          navigation_path: /lovelace/Appareils
+      - type: custom:button-card
+        template:
+          - separator_activity_card
+      - type: conditional
+        conditions:
+          - condition: and
+            conditions:
+              - condition: state
+                entity: sensor.pieces_allumees
+                state_not: Aucune
+              - condition: state
+                entity: input_boolean.show_lumiere
+                state: 'on'
+        card:
+          type: custom:button-card
+          template:
+            - sensor_activity_card
+          entity: light.tout
+          name: Lumières
+          label: |
+            [[[ return states['sensor.pieces_allumees'].state  ]]]
+          icon: mdi:lightbulb-outline
+          tap_action:
+            action: navigate
+            navigation_path: /lovelace/Lumières
+      - type: conditional
+        conditions:
+          - condition: and
+            conditions:
+              - condition: state
+                entity: sensor.mouv_on
+                state_not: Aucun
+              - condition: state
+                entity: input_boolean.show_mouvement
+                state: 'on'
+        card:
+          type: custom:button-card
+          template:
+            - sensor_activity_card
+          entity: sensor.mouv_on
+          name: Mouvements
+          label: |
+            [[[ return states['sensor.mouv_on'].state  ]]]
+          icon: mdi:run-fast
+          tap_action:
+            action: navigate
+            navigation_path: /lovelace/porte_mouv_serrure
+      - type: conditional
+        conditions:
+          - condition: and
+            conditions:
+              - condition: state
+                entity: sensor.porte_on
+                state_not: Aucune
+              - condition: state
+                entity: input_boolean.show_porte
+                state: 'on'
+        card:
+          type: custom:button-card
+          template:
+            - sensor_activity_card
+          entity: binary_sensor.portes
+          name: Portes
+          label: |
+            [[[ return states['sensor.porte_on'].state  ]]]
+          icon: mdi:door-open
+          tap_action:
+            action: navigate
+            navigation_path: /lovelace/porte_mouv_serrure
+      - type: conditional
+        conditions:
+          - condition: and
+            conditions:
+              - condition: state
+                entity: sensor.serrure_ouverte
+                state_not: Aucune
+              - condition: state
+                entity: input_boolean.show_serrures
+                state: 'on'
+        card:
+          type: custom:button-card
+          template:
+            - sensor_activity_card
+          entity: group.serrures
+          name: Serrures
+          label: |
+            [[[ return states['sensor.serrure_ouverte'].state  ]]]
+          icon: mdi:lock-outline
+      - type: conditional
+        conditions:
+          - condition: and
+            conditions:
+              - condition: state
+                entity: sensor.temperature_basse
+                state_not: OK
+        card:
+          type: custom:button-card
+          template:
+            - sensor_activity_card
+          entity: sensor.temperature_basse
+          name: Témpérature basse
+          label: |
+            [[[ return states['sensor.temperature_basse'].state  ]]]
+          tap_action:
+            action: navigate
+            navigation_path: /lovelace/Temp
+      - type: conditional
+        conditions:
+          - condition: and
+            conditions:
+              - condition: state
+                entity: group.aspis
+                state: 'on'
+              - condition: state
+                entity: input_boolean.show_appareils
+                state: 'on'
+        card:
+          type: custom:button-card
+          template:
+            - sensor_activity_card
+          entity: group.aspis
+          name: Aspirateur
+          label: |
+            [[[ return states['sensor.aspi_info'].state  ]]]
+          icon: mdi:vacuum-outline
+          tap_action:
+            action: navigate
+            navigation_path: /lovelace/Appareils
+      - type: conditional
+        conditions:
+          - condition: and
+            conditions:
+              - condition: state
+                entity: group.tv
+                state: 'on'
+              - condition: state
+                entity: input_boolean.show_appareils
+                state: 'on'
+        card:
+          type: custom:button-card
+          template:
+            - sensor_activity_card
+          entity: group.tv
+          name: Télévision
+          label: >
+            [[[ return states['sensor.tv_salon_info'].state + '<br>' +
+            states['sensor.tv_parents_info'].state ]]]
+          icon: mdi:television media_player.echo_inayah
+          tap_action:
+            action: navigate
+            navigation_path: /lovelace/Appareils
+      - type: conditional
+        conditions:
+          - condition: and
+            conditions:
+              - condition: state
+                entity: group.appareils
+                state: 'on'
+              - condition: state
+                entity: input_boolean.header_show_appareils
+                state: 'on'
+        card:
+          type: custom:button-card
+          template:
+            - sensor_activity_card
+          entity: group.appareils
+          name: Appareils
+          label: |
+            [[[ return states['sensor.appareils'].state  ]]]
+          icon: mdi:connection
+          tap_action:
+            action: navigate
+            navigation_path: /lovelace/Appareils
+      - type: conditional
+        conditions:
+          - condition: and
+            conditions:
+              - condition: state
+                entity: input_boolean.musique
+                state: 'on'
+              - condition: state
+                entity: input_boolean.show_musique
+                state: 'on'
+        card:
+          type: custom:button-card
+          template:
+            - sensor_activity_card
+          entity: sensor.musique
+          name: Musique
+          label: |
+            [[[ return states['sensor.musique'].state  ]]]
+          icon: mdi:speaker-multiple
+          tap_action:
+            action: navigate
+            navigation_path: /lovelace/Musique
+      - type: conditional
+        conditions:
+          - condition: and
+            conditions:
+              - condition: state
+                entity: sensor.appareils_connectes
+                state_not: Aucun
+              - condition: state
+                entity: input_boolean.show_connecte
+                state: 'on'
+        card:
+          type: custom:button-card
+          template:
+            - sensor_activity_card
+          entity: group.connectes
+          name: Connectés
+          label: |
+            [[[ return states['sensor.appareils_connectes'].state  ]]]
+          icon: mdi:wifi-strength-outline
+      - type: conditional
+        conditions:
+          - condition: and
+            conditions:
+              - condition: state
+                entity: sensor.appareils_charges
+                state_not: Aucun
+              - condition: state
+                entity: input_boolean.show_appareils_charges
+                state: 'on'
+        card:
+          type: custom:button-card
+          template:
+            - sensor_activity_card
+          entity: sensor.appareils_charges
+          name: Chargés
+          label: |
+            [[[ return states['sensor.appareils_charges'].state  ]]]
+          icon: mdi:battery-charging-outline
+          tap_action:
+            action: navigate
+            navigation_path: /lovelace/batteries
+      - type: conditional
+        conditions:
+          - condition: and
+            conditions:
+              - condition: state
+                entity: input_boolean.show_presence
+                state: 'on'
+              - condition: state
+                entity: person.bidalos
+                state_not: home
+              - condition: state
+                entity: sensor.presents
+                state_not: Personne
+        card:
+          type: custom:button-card
+          template:
+            - sensor_activity_card
+          entity: sensor.presents
+          name: Présence
+          label: |
+            [[[ return states['sensor.presents'].state  ]]]
+          icon: mdi:home-outline
+          tap_action:
+            action: navigate
+            navigation_path: /lovelace/Personnes
+      - type: conditional
+        conditions:
+          - condition: and
+            conditions:
+              - condition: state
+                entity: sensor.modes
+                state_not: Aucun
+              - condition: state
+                entity: input_boolean.header_show_mode
+                state: 'on'
+        card:
+          type: custom:button-card
+          template:
+            - sensor_activity_card
+          entity: sensor.modes
+          name: Modes
+          label: |
+            [[[ return states['sensor.modes'].state  ]]]
+          icon: mdi:order-bool-descending-variant
+          tap_action:
+            action: navigate
+            navigation_path: /lovelace/reglages
+      - type: conditional
+        conditions:
+          - condition: and
+            conditions:
+              - condition: state
+                entity: input_boolean.vacances
+                state: 'on'
+        card:
+          type: custom:button-card
+          template:
+            - sensor_activity_card
+          entity: schedule.mode_absent_calendrier_aspi
+          name: Aspirateur
+          label: |
+            [[[ return states['sensor.aspi_mode_vacances'].state  ]]]
+          icon: mdi:vacuum-outline
+      - type: conditional
+        conditions:
+          - condition: and
+            conditions:
+              - condition: state
+                entity: sensor.linky_verif_j1
+                state_not: 'false'
+        card:
+          type: custom:button-card
+          template:
+            - sensor_activity_card
+          entity: sensor.linky_22338205427449_consumption
+          name: Conso électrique
+          label: >
+            [[[ return states['sensor.electricite_cout_jour_avec_abo'].state +"
+            € / " + entity.state + " kWh" ]]]
+          icon: mdi:flash-outline
+          tap_action:
+            action: navigate
+            navigation_path: /lovelace/Energie
+          custom_fields:
+            bubble: ●
+          styles:
+            custom_fields:
+              bubble:
+                - color: |
+                    [[[ 
+                      if (states["sensor.linky_verif_j1"].state == "false") return ''
+                      if (states["sensor.linky_22338205427449_consumption"].state < 6) return 'transparent';          
+                      if (states["sensor.linky_22338205427449_consumption"].state < 9) return 'var(--blue)';
+                      if (states["sensor.linky_22338205427449_consumption"].state < 12) return 'var(--yellow)'; 
+                      if (states["sensor.linky_22338205427449_consumption"].state < 15) return 'var(--orange)';
+                      if (states["sensor.linky_22338205427449_consumption"].state >= 15) return 'var(--red)';          
+                      else return 'transparent';
+                    ]]]        
+      - type: conditional
+        conditions:
+          - condition: or
+            conditions:
+              - condition: and
+                conditions:
+                  - condition: state
+                    entity: sensor.maj
+                    state_not: Aucune mise à jour
+                  - condition: state
+                    entity: input_boolean.show_maj
+                    state: 'on'
+              - condition: and
+                conditions:
+                  - condition: state
+                    entity: sensor.verif_avertissement
+                    state: 'true'
+                  - condition: state
+                    entity: sensor.maj
+                    state: Aucune mise à jour
+                  - condition: state
+                    entity: input_boolean.show_info
+                    state: 'on'
+        card:
+          type: custom:button-card
+          template:
+            - title_activity_card
+          icon: mdi:information-outline
+          label: |
+            [[[ return  "Infos" ]]]
+      - type: conditional
+        conditions:
+          - condition: or
+            conditions:
+              - condition: and
+                conditions:
+                  - condition: state
+                    entity: sensor.maj
+                    state_not: Aucune mise à jour
+                  - condition: state
+                    entity: input_boolean.show_maj
+                    state: 'on'
+              - condition: and
+                conditions:
+                  - condition: state
+                    entity: sensor.verif_avertissement
+                    state: 'true'
+                  - condition: state
+                    entity: sensor.maj
+                    state: Aucune mise à jour
+                  - condition: state
+                    entity: input_boolean.show_info
+                    state: 'on'
+        card:
+          type: custom:button-card
+          template:
+            - separator_activity_card
+      - type: conditional
+        conditions:
+          - condition: and
+            conditions:
+              - condition: state
+                entity: sensor.maj
+                state_not: Aucune mise à jour
+              - condition: state
+                entity: input_boolean.show_maj
+                state: 'on'
+        card:
+          type: custom:button-card
+          template:
+            - sensor_activity_card
+          entity: sensor.maj
+          name: Mises à jour
+          label: |
+            [[[ return states['sensor.maj'].state  ]]]
+          icon: mdi:update
+          tap_action:
+            action: navigate
+            navigation_path: /lovelace/systeme
+      - type: conditional
+        conditions:
+          - condition: and
+            conditions:
+              - condition: state
+                entity: sensor.verif_avertissement
+                state: 'true'
+              - condition: state
+                entity: sensor.maj
+                state: Aucune mise à jour
+              - condition: state
+                entity: input_boolean.show_info
+                state: 'on'
+        card:
+          type: custom:button-card
+          template:
+            - sensor_activity_card
+          entity: sensor.web_scrape
+          name: Le saviez-vous ?
+          label: |
+            [[[ return states['sensor.web_scrape'].state ]]]
+          styles:
+            label:
+              - font-style: italic
+          icon: mdi:newspaper-variant-outline
+      - type: custom:vertical-stack-in-card
+        horizontal: true
+        card_mod:
+          style: |
+            ha-card { 
+              border-radius: 0px;
+              background: transparent !important;
+              box-shadow: none;         
+              margin-top: 10px !important;
+              margin-bottom: 2px !important;
+            }
+        cards:
+          - type: custom:vertical-stack-in-card
+            card_mod:
+              style: |
+                ha-card { 
+                  border-radius: 10px;
+                  margin: 2px;
+                }
+            cards:
+              - type: custom:button-card
+                entity: switch.adguard_home_protection
+                icon: mdi:shield-check-outline
+                show_label: false
+                template:
+                  - sub_button
+                  - sub_button_state
+          - type: custom:vertical-stack-in-card
+            card_mod:
+              style: |
+                ha-card { 
+                  border-radius: 10px;
+                  margin: 2px;
+                }
+            cards:
+              - type: custom:button-card
+                entity: binary_sensor.home_assistant_versions_update_available
+                icon: mdi:home-assistant
+                show_label: false
+                template:
+                  - sub_button
+                  - sub_button_state
+                styles:
+                  icon:
+                    - color: |
+                        [[[
+                          if (states['binary_sensor.home_assistant_versions_update_available'].state == "on" || states['update.home_assistant_supervisor_update'].state == "on" || states['update.home_assistant_operating_system_update'].state == "on")
+                            return 'var(--icon-blue)'
+                          return 'var(--icon-off)'
+                        ]]] 
+                  card:
+                    - background-color: |
+                        [[[
+                          if (states['binary_sensor.home_assistant_versions_update_available'].state == "on" || states['update.home_assistant_supervisor_update'].state == "on" || states['update.home_assistant_operating_system_update'].state == "on")
+                            return 'var(--card-blue)'
+                          return ''
+                        ]]]                  
+                tap_action:
+                  action: navigate
+                  navigation_path: /lovelace/systeme
+                double_tap_action:
+                  action: call-service
+                  service: input_boolean.toggle
+                  service_data:
+                    entity_id: input_boolean.show_maj
+          - type: custom:vertical-stack-in-card
+            card_mod:
+              style: |
+                ha-card { 
+                  border-radius: 10px;
+                  margin: 2px;
+                }
+            cards:
+              - type: custom:button-card
+                entity: sensor.hacs
+                icon: mdi:package-variant
+                show_label: false
+                template:
+                  - sub_button
+                  - sub_button_state
+                tap_action:
+                  action: navigate
+                  navigation_path: /lovelace/systeme
+                double_tap_action:
+                  action: call-service
+                  service: input_boolean.toggle
+                  service_data:
+                    entity_id: input_boolean.header_show_maj
+          - type: custom:vertical-stack-in-card
+            card_mod:
+              style: |
+                ha-card { 
+                  border-radius: 10px;
+                  margin: 2px;
+                }
+            cards:
+              - type: custom:button-card
+                icon: mdi:qrcode
+                show_label: false
+                template:
+                  - sub_button
+                label: wifi
+                tap_action:
+                  action: navigate
+                  navigation_path: /lovelace/invités
+          - type: custom:vertical-stack-in-card
+            card_mod:
+              style: |
+                ha-card { 
+                  border-radius: 10px;
+                  margin: 2px;
+                }
+            cards:
+              - type: custom:button-card
+                entity: group.mode
+                icon: mdi:cog-outline
+                show_label: false
+                template:
+                  - sub_button
+                  - sub_button_state
+                tap_action:
+                  action: navigate
+                  navigation_path: /lovelace/reglages
+          - type: custom:vertical-stack-in-card
+            card_mod:
+              style: |
+                ha-card { 
+                  border-radius: 10px;
+                  margin: 2px;
+                }
+            cards:
+              - type: custom:button-card
+                entity: event.annonces
+                icon: mdi:message-processing-outline
+                show_label: false
+                template:
+                  - sub_button
+                  - sub_button_state
+                tap_action:
+                  action: navigate
+                  navigation_path: /lovelace/Annonces
+  - square: false
+    type: grid
+    cards:
+      - type: custom:button-card
+        template:
+          - inayah_alarm
+      - type: custom:button-card
+        template:
+          - nyla_alarm
+      - type: custom:button-card
+        template:
+          - leane_alarm
+      - type: custom:button-card
+        template:
+          - nina_alarm
+    columns: 2
