@@ -1,0 +1,126 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<domain type='kvm'>
+  <name>Windows 11</name>
+  <uuid>035e02d8-04d3-050e-9e06-350700080009</uuid>
+  <metadata>
+    <vmtemplate xmlns="unraid" name="Windows 11" icon="windows11.png" os="windowstpm"/>
+  </metadata>
+  <memory unit='KiB'>15728640</memory>
+  <currentMemory unit='KiB'>15728640</currentMemory>
+  <memoryBacking>
+    <nosharepages/>
+  </memoryBacking>
+  <vcpu placement='static'>3</vcpu>
+  <cputune>
+    <vcpupin vcpu='0' cpuset='9'/>
+    <vcpupin vcpu='1' cpuset='10'/>
+    <vcpupin vcpu='2' cpuset='11'/>
+  </cputune>
+  <os>
+    <type arch='x86_64' machine='pc-i440fx-7.2'>hvm</type>
+    <loader readonly='yes' type='pflash'>/usr/share/qemu/ovmf-x64/OVMF_CODE-pure-efi-tpm.fd</loader>
+    <nvram>/etc/libvirt/qemu/nvram/c74019c1-5352-79de-44dd-8fdd93feae22_VARS-pure-efi-tpm.fd</nvram>
+  </os>
+  <features>
+    <acpi/>
+    <apic/>
+    <hyperv mode='custom'>
+      <relaxed state='on'/>
+      <vapic state='on'/>
+      <spinlocks state='on' retries='8191'/>
+      <vendor_id state='on' value='none'/>
+    </hyperv>
+  </features>
+  <cpu mode='host-passthrough' check='none' migratable='on'>
+    <topology sockets='1' dies='1' cores='3' threads='1'/>
+    <cache mode='passthrough'/>
+    <feature policy='require' name='topoext'/>
+  </cpu>
+  <clock offset='localtime'>
+    <timer name='hypervclock' present='yes'/>
+    <timer name='hpet' present='no'/>
+  </clock>
+  <on_poweroff>destroy</on_poweroff>
+  <on_reboot>restart</on_reboot>
+  <on_crash>restart</on_crash>
+  <devices>
+    <emulator>/usr/local/sbin/qemu</emulator>
+    <disk type='file' device='cdrom'>
+      <driver name='qemu' type='raw'/>
+      <source file='/mnt/user/isos/virtio-win-0.1.240-1.iso'/>
+      <target dev='hdb' bus='sata'/>
+      <readonly/>
+      <address type='drive' controller='0' bus='0' target='0' unit='1'/>
+    </disk>
+    <disk type='block' device='disk'>
+      <driver name='qemu' type='raw' cache='writeback'/>
+      <source dev='/dev/disk/by-id/nvme-CT1000P5PSSD8_2210389F6DE6'/>
+      <target dev='hdc' bus='sata'/>
+      <boot order='1'/>
+      <address type='drive' controller='0' bus='0' target='0' unit='2'/>
+    </disk>
+    <controller type='usb' index='0' model='nec-xhci' ports='15'>
+      <address type='pci' domain='0x0000' bus='0x00' slot='0x07' function='0x0'/>
+    </controller>
+    <controller type='pci' index='0' model='pci-root'/>
+    <controller type='sata' index='0'>
+      <address type='pci' domain='0x0000' bus='0x00' slot='0x03' function='0x0'/>
+    </controller>
+    <controller type='virtio-serial' index='0'>
+      <address type='pci' domain='0x0000' bus='0x00' slot='0x04' function='0x0'/>
+    </controller>
+    <interface type='bridge'>
+      <mac address='52:54:00:eb:56:3b'/>
+      <source bridge='br0'/>
+      <model type='virtio'/>
+      <address type='pci' domain='0x0000' bus='0x00' slot='0x02' function='0x0'/>
+    </interface>
+    <serial type='pty'>
+      <target type='isa-serial' port='0'>
+        <model name='isa-serial'/>
+      </target>
+    </serial>
+    <console type='pty'>
+      <target type='serial' port='0'/>
+    </console>
+    <channel type='unix'>
+      <target type='virtio' name='org.qemu.guest_agent.0'/>
+      <address type='virtio-serial' controller='0' bus='0' port='1'/>
+    </channel>
+    <input type='mouse' bus='ps2'/>
+    <input type='keyboard' bus='ps2'/>
+    <tpm model='tpm-tis'>
+      <backend type='emulator' version='2.0' persistent_state='yes'/>
+    </tpm>
+    <audio id='1' type='none'/>
+    <hostdev mode='subsystem' type='pci' managed='yes'>
+      <driver name='vfio'/>
+      <source>
+        <address domain='0x0000' bus='0x0a' slot='0x00' function='0x0'/>
+      </source>
+      <address type='pci' domain='0x0000' bus='0x00' slot='0x05' function='0x0'/>
+    </hostdev>
+    <hostdev mode='subsystem' type='pci' managed='yes'>
+      <driver name='vfio'/>
+      <source>
+        <address domain='0x0000' bus='0x0a' slot='0x00' function='0x1'/>
+      </source>
+      <address type='pci' domain='0x0000' bus='0x00' slot='0x06' function='0x0'/>
+    </hostdev>
+    <hostdev mode='subsystem' type='pci' managed='yes'>
+      <driver name='vfio'/>
+      <source>
+        <address domain='0x0000' bus='0x0c' slot='0x00' function='0x4'/>
+      </source>
+      <address type='pci' domain='0x0000' bus='0x00' slot='0x08' function='0x0'/>
+    </hostdev>
+    <hostdev mode='subsystem' type='pci' managed='yes'>
+      <driver name='vfio'/>
+      <source>
+        <address domain='0x0000' bus='0x07' slot='0x00' function='0x1'/>
+      </source>
+      <address type='pci' domain='0x0000' bus='0x00' slot='0x09' function='0x0'/>
+    </hostdev>
+    <memballoon model='none'/>
+  </devices>
+</domain>
