@@ -1,22 +1,17 @@
 ### *Remote SSH from Linux to Windows*
 
-Activate OpenSSH from Windows Features
+#### 1. From Windows
+- Activate OpenSSH from Windows Features
+- Start sshd and ssh-agent service
+- Set services start to automatic
 
-Start sshd and ssh-agent service
+---
+#### 2. From Linux
 
-Set services start to automatic
-
-
-From Linux
-
-=> Generate cert pair with ssh-keygen
-
-Upload id_rsa.pub to Windows via sftp
-
-Append id_rsa.pub content to $env:USERPROFILE\.ssh\authorized_keys file
-
-Append id_rsa.pub content to %programdata%\***\admin_authorized_keys file
-
-Limit access to those 2 files to Administartors group only
-
-Test
+- Generate cert pair with ssh-keygen
+- cd to the cert pair location
+- Upload id_rsa.pub to Windows via sftp with put id_rsa.pub to C:\ProgramData\ssh\
+- <del>Append id_rsa.pub content to $env:USERPROFILE\.ssh\authorized_keys file</del>
+- Append id_rsa.pub content to %programdata%\ssh\admin_authorized_keys file
+- Limit access to those 2 files to Administartors group only
+- Delete id_rsa.pub
