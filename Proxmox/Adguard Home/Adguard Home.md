@@ -1,4 +1,4 @@
-To activate ipv6 DNS filtering
+## Activate ipv6 DNS filtering
 
     convert the DNS server IPv4 to iPv6 via https://dnschecker.org/ipv4-to-ipv6.php
     
