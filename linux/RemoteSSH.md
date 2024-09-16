@@ -14,4 +14,5 @@
 - <del>Append id_rsa.pub content to $env:USERPROFILE\.ssh\authorized_keys file</del>
 - Append id_rsa.pub content to %programdata%\ssh\admin_authorized_keys file
 - Limit access to those 2 files to Administartors group only
+- Specify config file with -i /config/.ssh/id_privatekey and chmod 600 id_privatekey
 - Delete id_rsa.pub
