@@ -25,4 +25,4 @@
 
 #### Use CF Zero Trust Tunnel to host xxxx.owndomain.fr on port 3001
 
-#### Install Tailscale with split DNS
+#### Install Tailscale with split DNS.
