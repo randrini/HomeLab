@@ -1,28 +1,34 @@
-### Setup the VPS
+# 🚀 **Setup the VPS**
 
-* create a new instance
-  * select free tier compute
-  * chose ubuntu
+### 1️⃣ **Create a New Instance**
+- Create a new instance:
+  - Select **Free Tier Compute**.
+  - Choose **Ubuntu**.
 
-* create a new networking
-  * set up a virtual cloud network
-  * change VCN and VNIC name
+### 2️⃣ **Create New Networking**
+- Set up a **Virtual Cloud Network (VCN)**:
+  - Change the **VCN** and **VNIC** name.
 
-* set up a security list
-  * add a new ingressrule
-      * source: 0.0.0.0/0
-      * protocol: TCP
-      * destination port range: 22 (ssh)
-  * add a new ingressrule
-      * source: 0.0.0.0/0
-      * protocol: TCP
-      * destination port range: 3001 (uptimekuma)
-  * click Add Ingress Rules
+### 3️⃣ **Set Up a Security List**
+- Add a new ingress rule:
+  - **Source:** `0.0.0.0/0`
+  - **Protocol:** TCP
+  - **Destination Port Range:** `22` (SSH)
 
-#### Install Docker
+- Add another ingress rule:
+  - **Source:** `0.0.0.0/0`
+  - **Protocol:** TCP
+  - **Destination Port Range:** `3001` (Uptime Kuma)
 
-#### Install UptimeKuma via docker compose
+- Click **Add Ingress Rules**.
 
-#### Use CF Zero Trust Tunnel to host xxxx.owndomain.fr on port 3001
+---
 
-#### Install Tailscale with split DNS..
+# 🐳 **Install Docker**
+
+### 4️⃣ **Install UptimeKuma via Docker Compose**
+
+### 5️⃣ **Use CF Zero Trust Tunnel**
+- Host `xxxx.owndomain.fr` on port `3001`.
+
+### 6️⃣ **Install Tailscale with Split DNS**
