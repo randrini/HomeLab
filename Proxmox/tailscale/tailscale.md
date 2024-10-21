@@ -1,25 +1,25 @@
-### Alpine Linux CT
+# 🌟 Alpine Linux CT Setup Guide 🌟
 
-*In case needed*
-  `rc-update add tailscale  && rc-service tailscale restart`
-  
+To configure Alpine Linux with Tailscale and IP forwarding, follow these steps:
 
-*Add IP forwarding*
+```bash
+# Enable Tailscale Service (if needed)
+rc-update add tailscale && rc-service tailscale restart
 
-  `echo 'net.ipv4.ip_forward = 1' | tee -a /etc/sysctl.d/99-tailscale.conf`
-  
-  `echo 'net.ipv6.conf.all.forwarding = 1' | tee -a /etc/sysctl.d/99-tailscale.conf`
-  
-  `sysctl -p /etc/sysctl.d/99-tailscale.conf`
+# Enable IPv4 forwarding
+echo 'net.ipv4.ip_forward = 1' | tee -a /etc/sysctl.d/99-tailscale.conf
 
-*Add sysctl as service !!*
+# Enable IPv6 forwarding
+echo 'net.ipv6.conf.all.forwarding = 1' | tee -a /etc/sysctl.d/99-tailscale.conf
 
-  `rc-update add sysctl`
-  
-  `rc-service systcl restart`
+# Apply the new configuration
+sysctl -p /etc/sysctl.d/99-tailscale.conf
 
-*Reboot*
+# Add sysctl to services
+rc-update add sysctl
 
-`reboot`
+# Restart sysctl service
+rc-service sysctl restart
 
-*Test*
+# Reboot system to apply changes
+reboot
