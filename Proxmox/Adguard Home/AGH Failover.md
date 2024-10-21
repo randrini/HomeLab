@@ -13,3 +13,4 @@ To set up AdGuard Home failover, follow these steps:
 
 #### 3️⃣ **Set Up AGH Sync on Local Docker Host**
 - Install **AGH Sync** using Komodo Docker Compose 📦.
+
