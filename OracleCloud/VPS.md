@@ -1,4 +1,4 @@
-# 🚀 **Setup the VPS**
+# 🚀 **Setup Upkuma on the VPS**
 
 ### 1️⃣ **Create a New Instance**
 - Create a new instance:
